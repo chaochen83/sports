@@ -6,24 +6,24 @@
 
     {{{ Session::get('message') }}}  </br>  
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main cms-list">
+        <div class="col-md-10 col-md-offset-2 main cms-list cms-list">
           <!-- <h1 class="page-header">列表</h1> -->
 
-          <h2 class="sub-header">培训列表</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
+          <h3 class="sub-header">培训列表</h3>
+          <div class="cms-table no-border">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>名称</th>
-                  <th>介绍</th>
-                  <th>日期</th>
-                  <th>主讲人</th>
-                  <th>培训地点</th>
-                  <th>限额</th>
-                  <th>剩余名额</th>
-                  <th>学分</th>
-                  <th>操作</th>
+                  <th width="5">#</th>
+                  <th class="x-20">名称</th>
+                  <th class="x-10">介绍</th>
+                  <th class="x-10" class="x-10">日期</th>
+                  <th class="x-10">主讲人</th>
+                  <th class="x-10">培训地点</th>
+                  <th class="x-10">限额</th>
+                  <th class="x-10">剩余名额</th>
+                  <th class="x-10">学分</th>
+                  <th class="x-10">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -82,4 +82,5 @@
                   </li>
               </ul>
           </div>
+        </div>
 @stop

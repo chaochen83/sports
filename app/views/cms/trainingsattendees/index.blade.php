@@ -6,10 +6,10 @@
 
     {{{ Session::get('message') }}}  </br>  
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
           <!-- <h1 class="page-header">列表</h1> -->
 
-          <h2 class="sub-header">搜索培训记录</h2>
+          <h3 class="sub-header">搜索培训记录</h3>
           <!-- <h3>搜索培训记录</h2> -->
 
           {{ Form::open(array('action' => array('TrainingsAttendeesController@search'), 'class' => 'form-horizontal')) }}
@@ -91,4 +91,5 @@
               </tbody>
             </table>
           </div>
+        </div>
 @stop
