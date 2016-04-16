@@ -4,21 +4,21 @@
 
 @section('content')
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main cms-list">
+        <div class="col-md-10 col-md-offset-2 main cms-list cms-list">
 
-          <h2 class="sub-header">文章列表</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
+          <h3 class="sub-header">文章列表</h3>
+          <div class="cms-table no-border">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>标题</th>
-                  <th>一级栏目</th>
-                  <th>二级栏目</th>
-                  <th>日期</th>
-                  <th>作者</th>
-                  <th>附件</th>
-                  <th>操作</th>
+                  <th width="5">#</th>
+                  <th class="x-40">标题</th>
+                  <th class="x-10">一级栏目</th>
+                  <th class="x-10">二级栏目</th>
+                  <th class="x-10">日期</th>
+                  <th class="x-10">作者</th>
+                  <th class="x-10">附件</th>
+                  <th class="x-10">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -72,4 +72,5 @@
                   </li>
               </ul>
           </div>
+        </div>
 @stop

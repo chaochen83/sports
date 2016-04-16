@@ -7,12 +7,12 @@
     <!-- {{{ Session::get('message') or 'Default message!!!!!' }}}  </br>   -->
 
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
           <!-- <h1 class="page-header"></h1> -->
 
           @include('cms.layouts.notice')
 
-          <h2 class="sub-header">创建培训</h2>
+          <h3 class="sub-header">创建培训</h3>
 
           {{ Form::open(array('action' => array('TrainingsController@store'), 'class' => 'form-horizontal')) }}
 
@@ -79,7 +79,7 @@
             </div>
 
           {{ Form::close() }}
-
+        </div>
 @stop
 
 @section('custom_js')

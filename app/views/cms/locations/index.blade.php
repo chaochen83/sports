@@ -6,18 +6,18 @@
 
     {{{ Session::get('message') }}}  </br>  
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main cms-list">
+        <div class="col-md-10 col-md-offset-2 main cms-list cms-list">
           <!-- <h1 class="page-header">列表</h1> -->
 
-          <h2 class="sub-header">场地列表</h2>
+          <h3 class="sub-header">场地列表</h3>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>名称</th>
-                  <th>规模</th>
-                  <th>操作</th>
+                  <th width="5">#</th>
+                  <th class="x-60">名称</th>
+                  <th class="x-20">规模</th>
+                  <th class="x-20">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -69,4 +69,5 @@
                   </li>
               </ul>
           </div>
+        </div>
 @stop

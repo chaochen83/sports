@@ -24,7 +24,7 @@ return array(
 			'host'      => 'localhost',
 			'database'  => 'sports',
 			'username'  => 'root',
-			'password'  => '19830819',
+			'password'  => '1234',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',

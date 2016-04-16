@@ -6,54 +6,46 @@
 
     {{{ Session::get('message') }}}  </br>  
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
 
-          <h2 class="sub-header">查询培训记录</h2>
+          <h3 class="sub-header">查询培训记录</h3>
 
-          {{ Form::open(array('action' => array('TrainingsAttendeesController@doSearch'), 'class' => 'form-horizontal')) }}
-            <fieldset>
+          {{ Form::open(array('action' => array('TrainingsAttendeesController@doSearch'), 'class' => 'form-inline')) }}
+            <fieldset class="cms-seach-bar">
 
             @if (Session::get('user_role') == 'admin')
               <div class="form-group">
-                <label for="worker_id" class="col-sm-2 control-label">工号</label>
-                <div class="col-sm-6">
+                <label for="worker_id" class="control-label">工号</label>
                   <input type="text" id="worker_id" name="worker_id" class="form-control" placeholder="工号" value="" >
-                </div>
               </div>
             @endif
 
               <div class="form-group">
-                <label for="inputEmail3" class="col-sm-2 control-label">开始日期</label>
-                <div class="col-sm-6">
+                <label for="inputEmail3" class="control-label">开始日期</label>
                   <input type="text" class="form-control defTime" name="start_date" placeholder="开始日期" value="{{date('Y-m-d')}}">
-                </div>
               </div>
 
               <div class="form-group">
-                <label for="培训" class="col-sm-2 control-label">培训</label>
-                <div class="col-sm-6">
+                <label for="培训" class="control-label">培训</label>
                   <select id="training" name="training_id" class="form-control">
                       <option value=""></option>
                     @foreach($trainings as $id => $title)
                       <option value="{{$id}}">{{$title}}</option>
                     @endforeach
                   </select>
-                </div>
               </div>
 
               <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <button type="submit" class="btn btn-primary">提交</button>
-                </div>
+                  <button type="submit" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-search"></i> 查询</button>
               </div>
               
             </fieldset>
           {{ Form::close() }}
 
-          <h2 class="sub-header">培训记录</h2>
+          <!-- <h2 class="sub-header">培训记录</h2> -->
 
-          <div class="table-responsive">
-            <table class="table table-striped table-hover table-condensed">
+          <div class="cms-table no-border">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
                   <th width="5">#</th>
@@ -100,4 +92,5 @@
               </tbody>
             </table>
           </div>
+        </div>
 @stop

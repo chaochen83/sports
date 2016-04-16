@@ -4,11 +4,11 @@
 
 @section('content')
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main cms-list">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
 
-          <h2 class="sub-header">留言列表</h2>
-          <div class="table-responsive">
-            <table class="table table-striped table-hover table-condensed">
+          <h3 class="sub-header">留言列表</h3>
+          <div class="cms-table no-border">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
                   <th width="30">留言内容</th>
@@ -85,5 +85,5 @@
               </p>
               <span>{{$start_index}}-{{$end_index}}条，共{{$total_pages}}页</span>
           </div> -->
-
+        </div>
 @stop

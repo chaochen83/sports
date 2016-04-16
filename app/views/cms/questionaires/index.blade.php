@@ -4,18 +4,18 @@
 
 @section('content')
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main cms-list">
+        <div class="col-md-10 col-md-offset-2 main cms-list cms-list">
 
-          <h2 class="sub-header">问卷调查列表</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
+          <h3 class="sub-header">问卷调查列表</h3>
+          <div class="cms-table no-border">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
-                  <th>标题</th>
-                  <th>开始时间</th>
-                  <th>结束时间</th>
-                  <th>状态</th>
-                  <th>操作</th>
+                  <th class="x-60">标题</th>
+                  <th class="x-10">开始时间</th>
+                  <th class="x-10">结束时间</th>
+                  <th class="x-10">状态</th>
+                  <th class="x-10">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -69,10 +69,9 @@
                   </li>
               </ul>
           </div>
-<!-- 
-          <div class="pagination mt30">
+ 
+          <!--<div class="pagination mt30">
               <p>
-
                   <a href="/cms/messages">首页</a>
                   <a href="/cms/messages?page={{ $previous_page }}">上一页</a>
 
@@ -85,5 +84,6 @@
               </p>
               <span>{{$start_index}}-{{$end_index}}条，共{{$total_pages}}页</span>
           </div> -->
+        </div>
 
 @stop

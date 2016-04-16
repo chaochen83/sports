@@ -4,18 +4,18 @@
 
 @section('content')
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
 
-          <h2 class="sub-header">二级栏目列表</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
+          <h3 class="sub-header">二级栏目列表</h3>
+          <div class="cms-table no-border">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>一级栏目</th>
-                  <th>二级栏目</th>
-                  <th>栏目类型</th>
-                  <th>操作</th>
+                  <th width="5">#</th>
+                  <th class="x-40">一级栏目</th>
+                  <th class="x-40">二级栏目</th>
+                  <th class="x-10">栏目类型</th>
+                  <th class="x-10">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -47,5 +47,6 @@
               </tbody>
             </table>
           </div>
+        </div>
 
 @stop

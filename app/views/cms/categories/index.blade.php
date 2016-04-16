@@ -4,16 +4,16 @@
 
 @section('content')
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
 
-          <h2 class="sub-header">一级栏目列表</h2>
-          <div class="table-responsive">
-            <table class="table table-striped">
+          <h3 class="sub-header">一级栏目列表</h3>
+          <div class="cms-table no-border">
+            <table class="table table-striped table-hover">
               <thead>
                 <tr>
-                  <th>#</th>
-                  <th>一级栏目</th>
-                  <th>操作</th>
+                  <th width="5">#</th>
+                  <th class="x-70">一级栏目名称</th>
+                  <th class="x-30">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -37,5 +37,6 @@
               </tbody>
             </table>
           </div>
+        </div>
 
 @stop

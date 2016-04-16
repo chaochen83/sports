@@ -5,7 +5,7 @@
     {{{ Session::get('message') }}}  </br>  
           @include('cms.layouts.notice')
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
 
           <h2 class="sub-header">重置密码</h2>
           <div class="table-responsive">
@@ -31,5 +31,6 @@
               </tbody>
             </table>
           </div>
+        </div>
 
 @stop

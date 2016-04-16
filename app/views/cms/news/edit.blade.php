@@ -4,11 +4,11 @@
 
 @section('content')
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
 
           @include('cms.layouts.notice')
 
-          <h2 class="sub-header">编辑文章</h2>
+          <h3 class="sub-header">编辑文章</h3>
 
         {{ Form::open(array('action' => array('NewsController@update', $article->id), 'class' => 'form-horizontal', 'files' => true)) }}
 
@@ -92,5 +92,6 @@
             </div>
 
           {{ Form::close() }}
+        </div>
 
 @stop

@@ -5,20 +5,20 @@
 @section('content')
 
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
           <!-- <h1 class="page-header"></h1> -->
 
           @include('cms.layouts.notice')
 
-          <h2 class="sub-header">{{ $location->name }} 已被租用的时间段：</h2>
+          <h3 class="sub-header">{{ $location->name }} 已被租用的时间段：</h3>
 
-          <div class="table-responsive">
-            <table class="table table-striped">
+          <div class="cms-table no-border">
+            <table class="table table-striped table-hover ">
               <thead>
                 <tr>
-                  <th>日期</th>
-                  <th>开始时间</th>
-                  <th>结束时间</th>
+                  <th class="x-40">日期</th>
+                  <th class="x-30">开始时间</th>
+                  <th class="x-30">结束时间</th>
 <!--                   <th>参加人数</th>
                   <th>场地用途</th>
                   <th>租用部门</th>
@@ -43,7 +43,7 @@
             </table>
           </div>
 
-          <h2 class="sub-header">申请租用</h2>
+          <h3 class="sub-header">申请租用</h3>
 
         {{ Form::open(array('action' => array('LocationsController@rent', $location->id), 'class' => 'form-horizontal')) }}
 
@@ -112,7 +112,7 @@
             </div>
 
           {{ Form::close() }}
-
+        </div>
 @stop
 
 @section('custom_js')

@@ -4,11 +4,11 @@
 
 @section('content')
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-md-10 col-md-offset-2 main cms-list">
 
           @include('cms.layouts.notice')
 
-          <h2 class="sub-header">创建问卷调查</h2>
+          <h3 class="sub-header">创建问卷调查</h3>
 
         {{ Form::open(array('action' => array('QuestionairesController@create'), 'class' => 'filter-form form-horizontal validate', 'id' => 'voteDetailsForm')) }}
 
@@ -35,7 +35,7 @@
                         <input type="text" class="validate[required] form-control arial result-input" name="endTime" id="eTime" placeholder="请输入结束时间" readonly>
                     </div>
                 </div>
-  <!--              <div class="form-group">
+                <!--<div class="form-group">
                     <label class="col-xs-3 control-label"><strong class="text-danger">*</strong> 是否多选：</label>
                     <div class="col-xs-9">
                         <label class="radio-inline">
@@ -97,6 +97,7 @@
             </div>
 
           {{ Form::close() }}
+      </div>
 
 @stop
 
@@ -105,7 +106,7 @@
 @stop
 
 @section('extra_js')
-<script type="text/javascript" charset="utf-8" src="/js/login.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="/js/login.min.js"></script>
 @stop
 
 @section('custom_js')
