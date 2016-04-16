@@ -34,8 +34,10 @@
             <!-- 联系方式 -->
             <ul class="f-right">
                 <h3>联系方式 </h3>
-                <li><i class="icon icon-phone"></i> 总机：010-66096114</li>
-                <li><i class="icon icon-tag"></i> 地址：北京市西单大木仓胡同37号</li>
+                <li><i class="icon icon-phone"></i> 电话：51253516，51253517</li>
+                <li><i class="icon icon-phone"></i> 传真：51253518</li>
+                <li><i class="icon icon-tag"></i> 地址：绿瓦大楼229室</li>
+                <li><i class="icon icon-tag"></i> 邮箱：jfzx@sus.edu.cn</li>
             </ul>
         </div>
     </div>
