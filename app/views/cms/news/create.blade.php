@@ -1,8 +1,8 @@
 @extends('cms.layouts.default')
 
-@include('cms.news.sidebar')
-
 @section('content')
+
+@include('cms.news.sidebar')
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 

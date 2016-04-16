@@ -1,8 +1,8 @@
 @extends('cms.layouts.default')
 
-@include('cms.trainings.sidebar')
-
 @section('content')
+
+@include('cms.trainings.sidebar')
 
     <!-- {{{ Session::get('message') or 'Default message!!!!!' }}}  </br>   -->
 

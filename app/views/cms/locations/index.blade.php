@@ -1,8 +1,8 @@
 @extends('cms.layouts.default')
 
-@include('cms.locations.sidebar')
-
 @section('content')
+
+@include('cms.locations.sidebar')
 
     {{{ Session::get('message') }}}  </br>  
 

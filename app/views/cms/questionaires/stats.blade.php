@@ -1,8 +1,8 @@
 @extends('cms.layouts.default')
 
-@include('cms.questionaires.sidebar')
-
 @section('content')
+
+@include('cms.questionaires.sidebar')
 
     <div class="main cms-list col-md-9 col-md-offset-3">
         <!-- 标签切换 -->
