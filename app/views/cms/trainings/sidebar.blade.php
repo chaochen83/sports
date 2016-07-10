@@ -1,4 +1,4 @@
-        <div class="col-md-2 sidebar">
+<!--         <div class="col-md-2 sidebar">
           <ul class="nav nav-sidebar">
             <li {{ ($_SERVER['REQUEST_URI'] == '/trainings' ? 'class="active"' : '') }}><a href="/trainings"><i class="glyphicon glyphicon-file"></i> 培训列表</a></li>
             <li {{ ($_SERVER['REQUEST_URI'] == '/trainings_attendees/search' ? 'class="active"' : '') }}><a href="/trainings_attendees/search"><i class="glyphicon glyphicon-file"></i> 培训记录</a></li>
@@ -7,4 +7,15 @@
             <li {{ ($_SERVER['REQUEST_URI'] == '/trainings_attendees' ? 'class="active"' : '') }}><a href="/trainings_attendees"><i class="glyphicon glyphicon-file"></i> 审核培训</a></li>
             @endif
           </ul>
-        </div>
+        </div> -->
+
+
+            <div class="col-md-2 sidebar">
+                <h3 class="title">个人中心</h3>
+                <a href="/trainings" class="on">在线报名</a>
+                <a href="/locations">场地预约</a>
+                <a href="/cms/messages/unreply">留言板</a>
+                <a href="/cms/news">文章</a>
+                <a href="/cms/password/edit">账户信息</a>
+            </div>
+

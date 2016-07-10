@@ -19,7 +19,7 @@
 <body>
     @include('cms.layouts.header')
 
-    <div class="container-fluid">
+    <div class="container-fluid m-center">
       <div class="row">
         
         @yield('content')

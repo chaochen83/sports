@@ -34,10 +34,12 @@
             <!-- 联系方式 -->
             <ul class="f-right">
                 <h3>联系方式 </h3>
+               <!-- 20160625 修改联系方式 START -->
                 <li><i class="icon icon-phone"></i> 电话：51253516，51253517</li>
                 <li><i class="icon icon-phone"></i> 传真：51253518</li>
                 <li><i class="icon icon-tag"></i> 地址：绿瓦大楼229室</li>
-                <li><i class="icon icon-tag"></i> 邮箱：jfzx@sus.edu.cn</li>
+                <li><i class="icon icon-tag"></i> 邮箱：<a href="email:jfzx@sus.edu.cn">jfzx@sus.edu.cn</a></li>
+                <!-- 20160625 修改联系方式 END --> 
             </ul>
         </div>
     </div>

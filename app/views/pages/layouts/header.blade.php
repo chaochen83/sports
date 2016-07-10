@@ -2,6 +2,11 @@
 
         <!-- logo and menu -->
         <div class="head">
+            <!-- 20160625 添加学校名称-->
+            <div class="title">
+                <p class="main">上海体育学院教师发展中心</p>
+                <p class="minor">CENTER FOR FACULTY TEACHING DEVELOPMENT</p>
+            </div>        
             <div class="search-box">
                 <form id="search" name="search" action="/search" target="_blank" method="get">
                     <input type="text" id="s-box" class="s-box" name="q" value="" placeholder="请输入搜索关键字" />
