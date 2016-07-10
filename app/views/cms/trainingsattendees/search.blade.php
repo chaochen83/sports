@@ -2,13 +2,11 @@
 
 @section('content')
 
-@include('cms.trainings.sidebar')
-
-    {{{ Session::get('message') }}}  </br>  
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
-
-          <h3 class="sub-header">查询培训记录</h3>
+          {{{ Session::get('message') }}} 
+          <h3 class="sub-header"><a>查询培训记录</a></h3>
 
           {{ Form::open(array('action' => array('TrainingsAttendeesController@doSearch'), 'class' => 'form-inline')) }}
             <fieldset class="cms-seach-bar">

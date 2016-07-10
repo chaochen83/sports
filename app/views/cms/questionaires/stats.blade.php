@@ -2,13 +2,14 @@
 
 @section('content')
 
-@include('cms.questionaires.sidebar')
+@include('cms.layouts.sidebar')
 
-    <div class="main cms-list col-md-9 col-md-offset-3">
+    <div class="main cms-list col-md-10 col-md-offset-3">
         <!-- 标签切换 -->
-        <ul class="nav nav-tabs mt10">
+        <!-- <ul class="nav nav-tabs mt10">
             <li role="presentation" class="active"><a>问卷统计图</a></li>
-        </ul>
+        </ul> -->
+        <h3 class="sub-header"><a class="on">问卷统计</a></h3>
         <!-- 标题 -->
         <div class="cms-collapse">
             <!--  标题 -->

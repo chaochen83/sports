@@ -2,15 +2,14 @@
 
 @section('content')
 
-@include('cms.locations.sidebar')
-
-    {{{ Session::get('message') }}}  </br>  
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list cms-list">
           <!-- <h1 class="page-header">列表</h1> -->
 
-          <h3 class="sub-header">场地列表</h3>
+          <h3 class="sub-header"><a class="on">场地列表</a></h3>
           <div class="table-responsive">
+          {{{ Session::get('message') }}}
             <table class="table table-striped">
               <thead>
                 <tr>
@@ -45,7 +44,7 @@
             </table>
           </div>
 
-          <div class="assistant row">
+          <div class="assistant">
               <div class="total">
                   <span class="text-primary arial">{{$start_index}}-{{$end_index}}</span>
                   <span> / 共</span>

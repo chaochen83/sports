@@ -2,11 +2,11 @@
 
 @section('content')
 
-@include('cms.messages.sidebar')
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
 
-          <h3 class="sub-header">留言列表</h3>
+          <h3 class="sub-header"><a class="on">留言列表</a></h3>
           <div class="cms-table no-border">
             <table class="table table-striped table-hover">
               <thead>
@@ -40,7 +40,7 @@
             </table>
           </div>
 
-          <div class="assistant row">
+          <div class="assistant">
               <div class="total">
                   <span class="text-primary arial">{{$start_index}}-{{$end_index}}</span>
                   <span> / 共</span>

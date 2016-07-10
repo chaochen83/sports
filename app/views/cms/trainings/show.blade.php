@@ -2,7 +2,7 @@
 
 @section('content')
 
-@include('cms.trainings.sidebar')
+@include('cms.layouts.sidebar')
 
     <!-- {{{ Session::get('message') or 'Default message!!!!!' }}}  </br>   -->
 
@@ -17,7 +17,7 @@
 
           @include('cms.layouts.notice')
 
-          <h3 class="sub-header">培训详情</h3>
+          <h3 class="sub-header"><a class="on">培训详情</a></h3>
 
           <div class="cms-table no-border">
             <table class="table table-striped table-hover ">
@@ -61,7 +61,7 @@
             </table>
           </div>
 
-          <!-- <h2 class="sub-header">培训报名</h2> -->
+          <!-- <h2 class="sub-header"><a>培训报名</h2> -->
 
 
         </div>

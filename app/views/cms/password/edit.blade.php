@@ -7,7 +7,7 @@
 
           @include('cms.layouts.notice')
 
-          <h3 class="sub-header">更改密码</h3>
+          <h3 class="sub-header"><a class="on">更改密码</a></h3>
 
         {{ Form::open(array('action' => array('PasswordController@update'), 'class' => 'form-horizontal')) }}
 

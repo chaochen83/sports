@@ -2,14 +2,14 @@
 
 @section('content')
 
-@include('cms.trainings.sidebar')
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
           <!-- <h1 class="page-header"></h1> -->
 
           @include('cms.layouts.notice')
 
-          <h3 class="sub-header">编辑培训</h3>
+          <h3 class="sub-header"><a class="on">编辑培训</a></h3>
 
         {{ Form::open(array('action' => array('TrainingsController@update', $training->id), 'class' => 'form-horizontal')) }}
 

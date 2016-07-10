@@ -40,8 +40,10 @@
                         <a href="#">忘记密码？</a>
                     </li>
                     <li>
-                        <button type="submint" class="btn btn-bule3 btn-ok" title="立即登录">立即登录</button>
+                        <button type="submint" class="btn btn-bule4 btn-ok" title="立即登录">立即登录</button>
+                        <a href="/cas_login.php" class="btn btn-red2 ml10" title="前往CAS登录">前往CAS登录</a>
                     </li>
+
                 {{ Form::close() }}
                 <!-- </form> -->
             </ul>
@@ -100,17 +102,20 @@
 <script type="text/javascript" charset="utf-8" src="/js/login.min.js"></script>
 @stop
 
+@if (isset($_GET['error']) && $_GET['error'] == 'worker_id_non_exists')
 @section('custom_js')
 <script type="text/javascript">
     $(function() {
         //不显示弹出框
-        tiyuanFed.loginlInit();
+//	  tiyuanFed.loginlInit();
         // ---------------------------------
         // 显示提示正确信息的弹出框
         // tiyuanFed.loginlInit("ok","登录成功");
         // -------------------------------------
         // 显示提示错误信息的弹出框
-        // tiyuanFed.loginlInit("error","登录失败");
+          tiyuanFed.loginlInit("error", "工号不存在");
+          //tiyuanFed.loginlInit("error", "{{$_GET['error']}}");
     });
 </script>
 @stop
+@endif

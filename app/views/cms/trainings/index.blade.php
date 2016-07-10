@@ -2,14 +2,13 @@
 
 @section('content')
 
-@include('cms.trainings.sidebar')
-
-    {{{ Session::get('message') }}}  </br>  
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list cms-list">
           <!-- <h1 class="page-header">列表</h1> -->
-
-          <h3 class="sub-header">培训列表</h3>
+          {{{ Session::get('message') }}}
+          <h3 class="sub-header"><a class="on">培训列表</a></h3>
+          
           <div class="cms-table no-border">
             <table class="table table-striped table-hover">
               <thead>
@@ -58,7 +57,7 @@
           </div>
 
 
-          <div class="assistant row">
+          <div class="assistant">
               <div class="total">
                   <span class="text-primary arial">{{$start_index}}-{{$end_index}}</span>
                   <span> / 共</span>

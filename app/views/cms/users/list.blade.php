@@ -2,12 +2,11 @@
 
 @section('content')
 
-    {{{ Session::get('message') }}}  </br>  
           @include('cms.layouts.notice')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
-
-          <h2 class="sub-header">重置密码</h2>
+          {{{ Session::get('message') }}}
+          <h3 class="sub-header"><a class="on">重置密码</a></h3>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>

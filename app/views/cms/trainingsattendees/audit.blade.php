@@ -2,15 +2,14 @@
 
 @section('content')
 
-@include('cms.trainings.sidebar')
-
-    {{{ Session::get('message') }}}  </br>  
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
-
-          <h3 class="sub-header">待审核培训</h3>
+          {{{ Session::get('message') }}}
+          <h3 class="sub-header"><a class="on">待审核培训</a></h3>
 
           <div class="cms-table no-border">
+          
             <table class="table table-striped table-hover ">
               <thead>
                 <tr>

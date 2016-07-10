@@ -1,4 +1,3 @@
-    <!-- 20160624 修改头部 注释原来的，修改成一下效果 START-->
 <!--     <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -98,51 +97,34 @@
         </div>
       </div>
     </nav> -->
-    <!-- topbar -->
-    <div class="topbar">
-        <div class="m-center">
-            <!-- 未登录  显示如下-->
-        @if ( ! Session::get('user_id'))
-            <div class="r-login">
-                <a href="/login">[登录]</a>
-                <span>|</span>
-                <a href="/login?a=regsiter">[注册]</a>
-            </div>
-        @else
-            <!-- 已登录 显示如下-->
-            <div class="r-login">
-                <span>您好：{{Session::get('user_name')}}</span>
-                <span>|</span>
-                <a href="/cms">[个人中心]</a>
-                <span>|</span>
-                <a href="/logout">[注销]</a>
-            </div>
-        @endif
+
+<!-- topbar -->
+<div class="topbar">
+    <div class="m-center">
+        <!-- 已登录 显示如下-->
+        <div class="r-login">
+            <span>您好：{{Session::get('user_name')}}</span>
+            <span>|</span>
+            <a href="/logout">[注销]</a>
         </div>
     </div>
-    <!-- HEAD -->
-    <div class="head m-center">
-        <div class="title">
-            <p class="main">上海体育学院教师发展中心</p>
-            <p class="minor">CENTER FOR FACULTY TEACHING DEVELOPMENT</p>
-        </div>
-        <div class="search-box">
-            <form id="search" name="search" action="#" target="_blank" method="get">
-                <input type="text" id="s-box" class="s-box" name="" value="" placeholder="请输入搜索关键字" />
-                <button type="submit" id="s-submint" class="s-submint"><i class="icon icon-search"></i></button>
-            </form>
-        </div>
+</div>
+<!-- HEAD -->
+<div class="head m-center">
+    <div class="title">
+        <p class="main">上海体育学院教师发展中心</p>
+        <p class="minor">CENTER FOR FACULTY TEACHING DEVELOPMENT</p>
     </div>
-    <!-- 菜单 -->
-    <div class="nav-bar">
-        <div class="nav m-center">
-            <a href="#" target="_blank" class="tag">首页</a>
-            <a href="#" target="_blank" class="tag">中心概况</a>
-            <a href="#" target="_blank" class="tag">教学培训</a>
-            <a href="#" target="_blank" class="tag">教学研究</a>
-            <a href="#" target="_blank" class="tag">教学资源</a>
-            <a href="#" target="_blank" class="tag">教学评估</a>
-            <a href="#" target="_blank" class="tag">资讯与下载</a>
-        </div>
+</div>
+<!-- 菜单 -->
+<div class="nav-bar">
+    <div class="nav m-center">
+        <a href="/categories/1" target="_blank" class="tag">中心简介</a>
+        <a href="/categories/2" target="_blank" class="tag">教师培训</a>
+        <a href="/categories/3" target="_blank" class="tag">教学研究</a>
+        <a href="/categories/4" target="_blank" class="tag">教学资源</a>
+        <a href="/categories/5" target="_blank" class="tag">教学测评</a>
+        <a href="/categories/6" target="_blank" class="tag">对话交流</a>
+        <a href="/categories/7" target="_blank" class="tag">教学督导</a>
     </div>
-    <!-- 20160624 修改头部 注释原来的，修改成一下效果 END -->
+</div>

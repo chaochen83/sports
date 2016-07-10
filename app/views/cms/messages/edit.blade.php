@@ -2,13 +2,13 @@
 
 @section('content')
 
-@include('cms.messages.sidebar')
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
 
           @include('cms.layouts.notice')
 
-          <h3 class="sub-header">编辑留言</h3>
+          <h3 class="sub-header"><a class="on">编辑留言</a></h3>
 
         {{ Form::open(array('action' => array('MessageController@edit', $message->id), 'class' => 'form-horizontal')) }}
 

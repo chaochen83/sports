@@ -13,7 +13,7 @@
     <!-- Custom styles for CMS -->
     <link href="/css/cms-main.min.css" rel="stylesheet">
     @yield('extra_css')
-    <link href="/css/cms.css" rel="stylesheet">
+    <!-- <link href="/css/cms.css" rel="stylesheet"> -->
     <link href="/css/cms-skins.min.css" rel="stylesheet">
 </head>
 <body>

@@ -2,14 +2,14 @@
 
 @section('content')
 
-@include('cms.locations.sidebar')
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
           <!-- <h1 class="page-header"></h1> -->
 
           @include('cms.layouts.notice')
 
-          <h3 class="sub-header">预约查询</h3>
+          <h3 class="sub-header"><a class="on">预约查询</a></h3>
 
         {{ Form::open(array('action' => array('LocationsController@search'), 'class' => 'form-inline')) }}
             <fieldset class="cms-seach-bar">

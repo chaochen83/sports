@@ -2,14 +2,13 @@
 
 @section('content')
 
-@include('cms.trainings.sidebar')
-
-    {{{ Session::get('message') }}}  </br>  
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
+        {{{ Session::get('message') }}} 
           <!-- <h1 class="page-header">列表</h1> -->
 
-          <h3 class="sub-header">搜索培训记录</h3>
+          <h3 class="sub-header"><a class="on">搜索培训记录</a></h3>
           <!-- <h3>搜索培训记录</h2> -->
 
           {{ Form::open(array('action' => array('TrainingsAttendeesController@search'), 'class' => 'form-horizontal')) }}
@@ -43,7 +42,7 @@
             </fieldset>
           {{ Form::close() }}
 
-          <h2 class="sub-header">待审核培训</h2>
+          <h2 class="sub-header"><a>待审核培训</h2>
 
           <div class="table-responsive">
             <table class="table table-striped table-hover table-condensed">

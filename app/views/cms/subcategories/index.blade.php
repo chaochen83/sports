@@ -2,9 +2,11 @@
 
 @section('content')
 
+@include('cms.layouts.sidebar')
+
         <div class="col-md-10 col-md-offset-2 main cms-list">
 
-          <h3 class="sub-header">二级栏目列表</h3>
+          <h3 class="sub-header"><a class="on">二级栏目列表</a></h3>
           <div class="cms-table no-border">
             <table class="table table-striped table-hover">
               <thead>

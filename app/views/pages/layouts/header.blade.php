@@ -4,8 +4,10 @@
         <div class="head">
             <!-- 20160625 添加学校名称-->
             <div class="title">
-                <p class="main">上海体育学院教师发展中心</p>
-                <p class="minor">CENTER FOR FACULTY TEACHING DEVELOPMENT</p>
+		<a href="/">
+                	<p class="main">上海体育学院教师发展中心</p>
+                	<p class="minor">Center for Faculty Teaching Development of Shanghai University of Sport</p>
+		</a>
             </div>        
             <div class="search-box">
                 <form id="search" name="search" action="/search" target="_blank" method="get">
@@ -18,13 +20,13 @@
         <!-- 菜单 -->
         <div class="nav-bar tab">
             <div class="nav">
-                <a href="/categories/1" target="_blank" class="tag">中心简介</a>
-                <a href="/categories/2" target="_blank" class="tag">教师培训</a>
-                <a href="/categories/3" target="_blank" class="tag">教学研究</a>
-                <a href="/categories/4" target="_blank" class="tag">教学资源</a>
-                <a href="/categories/5" target="_blank" class="tag">教学测评</a>
-                <a href="/categories/6" target="_blank" class="tag">对话交流</a>
-                <a href="/categories/7" target="_blank" class="tag">教学督导</a>
+                <a href="/categories/1" target="_self" class="tag">中心简介</a>
+                <a href="/categories/2" target="_self" class="tag">教师培训</a>
+                <a href="/categories/3" target="_self" class="tag">教学研究</a>
+                <a href="/categories/4" target="_self" class="tag">教学资源</a>
+                <a href="/categories/5" target="_self" class="tag">教学测评</a>
+                <a href="/categories/6" target="_self" class="tag">对话交流</a>
+                <a href="/categories/7" target="_self" class="tag">教学督导</a>
             </div>
             <div class="nav-down">
 <?php

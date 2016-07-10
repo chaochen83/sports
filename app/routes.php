@@ -18,6 +18,8 @@ Route::get('login', 'UsersController@login');
 Route::post('register', 'UsersController@register');
 Route::post('login', 'UsersController@doLogin');
 Route::get('logout', 'UsersController@logout');
+Route::get('cas/login', 'UsersController@casLogin');
+Route::get('users/sync', 'UsersController@sync');
 
 Route::get('cms', 'UsersController@cms');
 

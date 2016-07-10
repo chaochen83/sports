@@ -2,11 +2,11 @@
 
 @section('content')
 
-@include('cms.related.sidebar')
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
 
-          <h3 class="sub-header">友情链接列表</h3>
+          <h3 class="sub-header"><a class="on">友情链接列表</a></h3>
           <div class="tcms-table no-border">
             <table class="table table-striped table-hover">
               <thead>

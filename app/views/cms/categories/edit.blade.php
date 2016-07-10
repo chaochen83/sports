@@ -2,13 +2,13 @@
 
 @section('content')
 
-@include('cms.categories.sidebar')
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
 
           @include('cms.layouts.notice')
 
-          <h2 class="sub-header">编辑一级栏目</h2>
+          <h3 class="sub-header"><a class="on">编辑一级栏目</a></h3>
 
         {{ Form::open(array('action' => array('CategoriesController@update', $category->id), 'class' => 'form-horizontal')) }}
 

@@ -2,12 +2,12 @@
 
 @section('content')
 
-@include('cms.locations.sidebar')
+@include('cms.layouts.sidebar')
 
 <div class="col-md-10 col-md-offset-2 main cms-list">
     <!-- <h1 class="page-header"></h1> -->
     @include('cms.layouts.notice')
-    <h3 class="sub-header">等待审核的预约</h3>
+    <h3 class="sub-header"><a class="on">等待审核的预约</a></h3>
     <div class="cms-table no-border">
         <table class="table table-striped table-hover">
             <thead>

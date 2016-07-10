@@ -2,13 +2,13 @@
 
 @section('content')
 
-@include('cms.related.sidebar')
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
 
           @include('cms.layouts.notice')
 
-          <h3 class="sub-header">创建教育部链接</h3>
+          <h3 class="sub-header"><a class="on">创建教育部链接</a></h3>
 
         {{ Form::open(array('action' => array('FriendlyController@storeEducation'), 'class' => 'form-horizontal')) }}
 

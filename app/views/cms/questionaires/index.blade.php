@@ -2,11 +2,11 @@
 
 @section('content')
 
-@include('cms.questionaires.sidebar')
+@include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list cms-list">
 
-          <h3 class="sub-header">问卷调查列表</h3>
+          <h3 class="sub-header"><a class="on">问卷调查列表</a></h3>
           <div class="cms-table no-border">
             <table class="table table-striped table-hover">
               <thead>
@@ -45,7 +45,7 @@
             </table>
           </div>
 
-          <div class="assistant row">
+          <div class="assistant">
               <div class="total">
                   <span class="text-primary arial">{{$start_index}}-{{$end_index}}</span>
                   <span> / 共</span>
@@ -69,21 +69,6 @@
                   </li>
               </ul>
           </div>
- 
-          <!--<div class="pagination mt30">
-              <p>
-                  <a href="/cms/messages">首页</a>
-                  <a href="/cms/messages?page={{ $previous_page }}">上一页</a>
-
-                  @for ($page = 1; $page <= $total_pages; $page++)
-                      <a href="/cms/messages?page={{ $page }}" {{ $page == $current_page ? 'class="on"' : ''}}>{{$page}}</a>
-                  @endfor
-
-                  <a href="/cms/messages?page={{ $next_page }}">下一页</a>
-                  <a href="/cms/messages?page={{ $total_pages }}">末页</a>
-              </p>
-              <span>{{$start_index}}-{{$end_index}}条，共{{$total_pages}}页</span>
-          </div> -->
         </div>
 
 @stop

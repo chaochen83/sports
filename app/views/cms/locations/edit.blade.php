@@ -2,12 +2,12 @@
 
 @section('content')
 
-@include('cms.locations.sidebar')
+@include('cms.layouts.sidebar')
 
 <div class="col-md-10 col-md-offset-2 main cms-list">
     <!-- <h1 class="page-header"></h1> -->
     @include('cms.layouts.notice')
-    <h3 class="sub-header">编辑场地</h3> 
+    <h3 class="sub-header"><a class="on">编辑场地</a></h3> 
     {{ Form::open(array('action' => array('LocationsController@update', $location->id), 'class' => 'form-horizontal')) }}
     <div class="form-group">
         <label for="name" class="col-sm-2 control-label">名称</label>
