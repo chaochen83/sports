@@ -53,6 +53,7 @@ class CategoriesController extends BaseController {
         $next_page     = ($current_page + 1 > $total_pages) ? $total_pages : ($current_page + 1);
 
         $data = [
+            'html_title'    => $category->name.'-上海体育学院教师教学发展中心',
             'category'      => $category, 
             'subcategories' => $subcategories, 
             'articles'      => $articles,

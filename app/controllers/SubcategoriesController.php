@@ -28,6 +28,8 @@ class SubcategoriesController extends BaseController {
 
         $category = Categories::findOrFail($id);
 
+        $subcategory = Subcategories::find($sub_id);
+
         $subcategories = Subcategories::where('category_id', $category->id)->notDeleted()->orderBy('id')->get();
 
         $subcategory_ids = [];
@@ -59,6 +61,7 @@ class SubcategoriesController extends BaseController {
         $next_page = ($current_page + 1 > $total_pages) ? $total_pages : ($current_page + 1);
 
         $data = [
+            'html_title'          => $subcategory->name.'-上海体育学院教师教学发展中心',
             'current_sub_id'      => $sub_id, 
             'current_subcategory' => $current_subcategory, 
             'category'            => $category, 

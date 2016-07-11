@@ -2,7 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>教师发展中心 - 上海体育学院</title>
+@if(isset($html_title))
+    <title>{{$html_title}}</title>
+@else
+    <title>教师教学发展中心 - 上海体育学院</title>
+@endif
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="教师发展中心，上海体育学院">
     <meta name="author" content="上海体育学院">
