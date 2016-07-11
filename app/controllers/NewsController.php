@@ -131,7 +131,7 @@ class NewsController extends BaseController {
     {
         $article = News::find($id);
 
-        if ($article->user_id != Session::get('user_id')) return Redirect::to("/logout");
+        if ($article->user_id != Session::get('user_id') && Session::get('user_role') !== 'admin') return Redirect::to("/logout");
 
         $subcategories = Subcategories::join('categories', 'categories.id', '=', 'subcategories.category_id')->select('subcategories.*', 'categories.name as category')->where('subcategories.status', 'active')->orderBy('categories.id')->orderBy('subcategories.id')->get();
 

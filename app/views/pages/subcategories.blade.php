@@ -20,8 +20,12 @@
             <div class="main-list i-list-box ">
                 <h3 class="title mb20"><span>{{$current_subcategory->name}}</span></h3>
                 <ul class="list">
-                    @foreach($articles as $article)
-                        <li><a href="/news/{{ $article->id }}" target="_blank"><i class="icon"></i>{{ $article->title }}</a><span class="datetime">{{ date('m-d', strtotime($article->date)) }}</span></li>
+                    @foreach($records as $record)
+                        @if($record['type'] == 'news')
+                            <li><a href="/news/{{ $record->id }}" target="_blank"><i class="icon"></i>{{ $record->title }}</a><span class="datetime">{{ date('m-d', strtotime($record->date)) }}</span></li>
+                        @elseif($record['type'] == 'training')
+                            <li><a href="/trainings/{{ $record->id }}" target="_blank"><i class="icon"></i>{{ $record->title }}</a><span class="datetime">{{ date('m-d', strtotime($record->date)) }}</span></li>
+                        @endif
                     @endforeach
                 </ul>
                 <!-- 分页 -->

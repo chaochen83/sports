@@ -46,9 +46,28 @@ class SubcategoriesController extends BaseController {
 
         $offset = ($current_page - 1) * self::PER_PAGE;
 
+        $trainings = Trainings::where('subcategory_id', $sub_id)->notDeleted()->notOver()->orderBy('date', 'desc')->get();
+
         $articles = News::where('subcategory_id', $sub_id)->notDeleted()->orderBy('date', 'desc')->skip($offset)->take(self::PER_PAGE)->get();
 
-        $articles_count = News::where('subcategory_id', $sub_id)->notDeleted()->count();
+        // Sort:
+        $items = [];
+
+        foreach ($trainings as $training) {
+            $items[$training->date] = $training;
+            $items[$training->date]['type'] = 'training';
+        }
+
+        foreach ($articles as $article) {
+            $items[$article->date] = $article;
+            $items[$article->date]['type'] = 'news';
+        }
+
+        krsort($items);
+
+        $records = array_slice($items, $offset, self::PER_PAGE);
+
+        $articles_count = count($items);
 
         $total_pages = ceil($articles_count / self::PER_PAGE);
 
@@ -66,7 +85,7 @@ class SubcategoriesController extends BaseController {
             'current_subcategory' => $current_subcategory, 
             'category'            => $category, 
             'subcategories'       => $subcategories, 
-            'articles'            => $articles,
+            'records'             => $records,
             'total_pages'         => $total_pages,
             'start_index'         => $start_index,
             'end_index'           => $end_index,

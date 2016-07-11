@@ -45,26 +45,37 @@ class TrainingsController extends Controller {
 
     public function create()
     {
-        // $data = ['trainings' => Trainings::notDeleted()->get()];
+        $subcategories = Subcategories::join('categories', 'categories.id', '=', 'subcategories.category_id')->select('subcategories.*', 'categories.name as category')->where('subcategories.status', 'active')->orderBy('categories.id')->orderBy('subcategories.id')->get();
 
-        return View::make('cms.trainings.create');
+        $data = ['subcategories' => $subcategories];
+
+        return View::make('cms.trainings.create', $data);
     }
 
     public function store()
     {
+        $data = [
+            'title'      => Input::get('title'),
+            'content'    => Input::get('content'),
+            'date'       => date('Y-m-d', strtotime(Input::get('date'))),
+            'time'       => date('H:i:s', strtotime(Input::get('date'))),
+            'speaker'    => Input::get('speaker'),
+            'location'   => Input::get('location'),
+            'seats'      => Input::get('seats'),
+            'seats_left' => Input::get('seats'),
+            'score'      => Input::get('score')
+        ];
+
+        if (Input::get('subcategory_id')) {
+            $subcategory = Subcategories::find(Input::get('subcategory_id'));
+
+            $data['subcategory_id'] = Input::get('subcategory_id');
+            $data['category_id']    = $subcategory->category_id;
+        }
+            
         try 
         {
-            Trainings::create([
-                'title'      => Input::get('title'),
-                'content'    => Input::get('content'),
-                'date'       => date('Y-m-d', strtotime(Input::get('date'))),
-                'time'       => date('H:i:s', strtotime(Input::get('date'))),
-                'speaker'    => Input::get('speaker'),
-                'location'   => Input::get('location'),
-                'seats'      => Input::get('seats'),
-                'seats_left' => Input::get('seats'),
-                'score'      => Input::get('score')
-                ]);
+            Trainings::create($data);
         } 
         catch (Exception $e) 
         {
@@ -81,26 +92,37 @@ class TrainingsController extends Controller {
     {
         $training = Trainings::find($id);
 
-        $data = ['training' => $training];
+        $subcategories = Subcategories::join('categories', 'categories.id', '=', 'subcategories.category_id')->select('subcategories.*', 'categories.name as category')->where('subcategories.status', 'active')->orderBy('categories.id')->orderBy('subcategories.id')->get();
+
+        $data = ['training' => $training, 'subcategories' => $subcategories];
 
         return View::make('cms.trainings.edit', $data);
     }
 
     public function update($id)
     {
+        $data = [
+            'title'      => Input::get('title'),
+            'content'    => Input::get('content'),
+            'date'       => date('Y-m-d', strtotime(Input::get('date'))),
+            'time'       => date('H:i:s', strtotime(Input::get('date'))),
+            'speaker'    => Input::get('speaker'),
+            'location'   => Input::get('location'),
+            'seats'      => Input::get('seats'),
+            'seats_left' => Input::get('seats'),
+            'score'      => Input::get('score')
+        ];
+
+        if (Input::get('subcategory_id')) {
+            $subcategory = Subcategories::find(Input::get('subcategory_id'));
+
+            $data['subcategory_id'] = Input::get('subcategory_id');
+            $data['category_id']    = $subcategory->category_id;
+        }
+
         try 
         {
-            Trainings::where('id', $id)->update([
-                'title'      => Input::get('title'),
-                'content'    => Input::get('content'),
-                'date'       => date('Y-m-d', strtotime(Input::get('date'))),
-                'time'       => date('H:i:s', strtotime(Input::get('date'))),
-                'speaker'    => Input::get('speaker'),
-                'location'   => Input::get('location'),
-                'seats'      => Input::get('seats'),
-                'seats_left' => Input::get('seats'),
-                'score'      => Input::get('score')
-                ]);
+            Trainings::where('id', $id)->update($data);
         } 
         catch (Exception $e) 
         {
@@ -109,7 +131,7 @@ class TrainingsController extends Controller {
             return Redirect::to("trainings/{$id}/edit?error=参数有误!");
         }
 
-        return Redirect::to("trainings/{$id}/edit?success=创建成功");
+        return Redirect::to("trainings/{$id}/edit?success=编辑成功");
     }
 
 

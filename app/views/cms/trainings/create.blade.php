@@ -66,6 +66,17 @@
             </div> 
 
             <div class="form-group">
+              <label for="category_id" class="col-sm-2 control-label">栏目</label>
+              <div class="col-sm-6">
+                <select class="form-control" name="subcategory_id">
+                  @foreach ($subcategories as $subcategory)
+                    <option value="{{ $subcategory->id }}">{{ $subcategory->category.' - '.$subcategory->name }}</option>
+                  @endforeach
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
               {{Form::label('介绍', '介绍', array('class' => 'col-sm-2 control-label'))}}
               <div class="col-sm-6">
                 {{Form::textarea('content', '', array('class' => 'form-control', 'placeholder' => '介绍'))}}            
