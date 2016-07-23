@@ -192,6 +192,42 @@ class TrainingsAttendeesController extends Controller {
         return View::make('cms.trainingsattendees.search', $data);
     }
 
+    public function scoreQuery()
+    {
+        $data = [];
+
+        return View::make('cms.trainingsattendees.score_query', $data);        
+    }
+
+
+    public function doScoreQuery()
+    {
+        if (Input::get('start_date')) {
+            $start_date = Input::get('start_date');
+        } else {
+            $start_date = date('Y-m-d');
+        }
+
+        $query = TrainingsAttendees::join('trainings', 'trainings_attendees.training_id', '=', 'trainings.id')->select(
+            'trainings_attendees.id', 
+            'trainings_attendees.worker_id', 
+            'trainings_attendees.status', 
+            'trainings.title',
+            'trainings.content',
+            'trainings.date',
+            'trainings.score'
+            )->where('trainings_attendees.worker_id', Input::get('worker_id'))
+            ->where('trainings.date', '>=', $start_date);
+
+        if (Input::get('end_date')) {
+            $query = $query->where('trainings.date', '<=', Input::get('end_date'));
+        }
+
+        $data['records'] = $query->get();
+
+        return View::make('cms.trainingsattendees.score_query', $data);        
+    }
+
     public function doSearch()
     {
         // Only search future if not specified:
