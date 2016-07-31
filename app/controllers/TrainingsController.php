@@ -141,9 +141,13 @@ class TrainingsController extends Controller {
 
         $training = Trainings::findOrFail($id);
 
+        $subcategory = Subcategories::findOrFail($training->subcategory_id);
+
+        $category = Categories::findOrFail($training->category_id);
+
         $history = TrainingsAttendees::where('training_id', $id)->where('worker_id', $worker_id)->first();
 
-        $data = ['training' => $training, 'history' => $history];
+        $data = ['training' => $training, 'history' => $history, 'category' => $category, 'subcategory' => $subcategory];
 
         return View::make('cms.trainings.show', $data); // return View('pages.about');
     }

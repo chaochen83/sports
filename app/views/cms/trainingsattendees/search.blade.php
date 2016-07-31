@@ -48,8 +48,11 @@
                 <tr>
                   <th width="5">#</th>
                   <th class="x-20">培训名称</th>
-                  <th class="x-30">培训介绍</th>
-                  <th class="x-10">培训日期</th>
+                  <th class="x-10">开始日期</th>
+                  <th class="x-10">主讲人</th>
+                  <th class="x-10">学分</th>
+                  <th class="x-10">限定人数</th>
+                  <th class="x-10">已申请</th>
                   <th class="x-10">工号</th>
                   <th class="x-5">状态</th>
                 @if(Session::get('user_role') == 'admin') 
@@ -62,8 +65,11 @@
                 <tr>
                   <td>{{ $record->id }}</td>
                   <td>{{ $record->title }}</td>
-                  <td>{{ $record->content }}</td>
                   <td>{{ $record->date }}</td>
+                  <td>{{ $record->speaker }}</td>
+                  <td>{{ $record->score }}</td>
+                  <td>{{ $record->seats }}</td>
+                  <td>{{ $record->seats - $record->seats_left }}</td>
                   <td>{{ $record->worker_id }}</td>
                   <td>
                     <?php

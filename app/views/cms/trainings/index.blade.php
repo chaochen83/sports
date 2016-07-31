@@ -5,8 +5,9 @@
 @include('cms.layouts.sidebar')
 
         <div class="col-md-10 col-md-offset-2 main cms-list cms-list">
-          <!-- <h1 class="page-header">列表</h1> -->
-          {{{ Session::get('message') }}}
+
+          @include('cms.layouts.notice')
+
           <h3 class="sub-header"><a class="on">培训列表</a></h3>
           
           <div class="cms-table no-border">
@@ -19,8 +20,8 @@
                   <th class="x-10" class="x-10">日期</th>
                   <th class="x-10">主讲人</th>
                   <th class="x-10">培训地点</th>
-                  <th class="x-10">限额</th>
-                  <th class="x-10">剩余名额</th>
+                  <th class="x-10">限报人数</th>
+                  <th class="x-10">已报人数</th>
                   <th class="x-10">学分</th>
                   <th class="x-10">操作</th>
                 </tr>
@@ -29,24 +30,24 @@
                 @foreach ($trainings as $training)
                 <tr>
                   <td>{{ $training->id }}</td>
-                  <td>{{ $training->title }}</td>
+                  <td><a href="/trainings/{{ $training->id }}" target="_blank">{{ $training->title }}</a></td>
                   <td>{{ mb_substr($training->content, 0, 10) }}</td>
                   <td>{{ $training->date }}</td>
                   <td>{{ $training->speaker }}</td>
                   <td>{{ $training->location }}</td>
                   <td>{{ $training->seats }}</td>
-                  <td>{{ $training->seats_left }}</td>
-                  <td>{{ $training->score }}</td>
+                  <td>{{ $training->seats - $training->seats_left }}</td>
+                  <td><a href="/trainings_attendees/search" >{{ $training->score }}</a></td>
                   <td>
-                    <a href="/trainings/{{ $training->id }}">
-                      <span class="glyphicon glyphicon-eye-open" aria-hidden="true" title="报名"></span>
+                    <a href="/trainings/{{ $training->id }}/attendees">
+                      <span class="glyphicon glyphicon-check" aria-hidden="true" title="报名"></span>
                     </a>
                   @if(Session::get('user_role') == 'admin') 
                     <a href="/trainings/{{ $training->id }}/edit">
-                      <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                      <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="编辑培训"></span>
                     </a>
                     <a href="/trainings/{{ $training->id }}/delete">
-                      <span class="glyphicon glyphicon-trash del" aria-hidden="true"></span>
+                      <span class="glyphicon glyphicon-trash del" aria-hidden="true" title="删除培训"></span>
                     </a>
                   @endif
                   </td>

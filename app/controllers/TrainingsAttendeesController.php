@@ -11,7 +11,7 @@ class TrainingsAttendeesController extends Controller {
         
         $this->worker_id = Input::get('worker_id');
 
-        $this->beforeFilter('csrf', ['only' => ['store']]);   
+        // $this->beforeFilter('csrf', ['only' => ['store']]);   
     }
 
     public function index()
@@ -93,13 +93,13 @@ class TrainingsAttendeesController extends Controller {
 
         if ( ! User::where('worker_id', $worker_id)->first())
         {
-            return Redirect::to("trainings/{$training_id}?error=工号 {$this->worker_id} 不存在!");
+            return Redirect::to("trainings?error=工号 {$this->worker_id} 不存在!");
         }
 
         $history = TrainingsAttendees::where('worker_id', $worker_id)->where('training_id', $training_id)->first();
 
         if ($history) 
-            return Redirect::to("trainings/{$training_id}?error={$this->worker_id} 已经申请过此培训!");
+            return Redirect::to("trainings?error={$this->worker_id} 已经申请过此培训!");
 
         TrainingsAttendees::create([
             'worker_id'   => $worker_id, 
@@ -109,7 +109,7 @@ class TrainingsAttendeesController extends Controller {
         Trainings::where('id', $training_id)->decrement('seats_left');
 
         // Flash Data : http://www.golaravel.com/laravel/docs/4.2/responses/#redirects
-        return Redirect::to("trainings/{$training_id}?success=报名成功")->with('message', 'register success!');
+        return Redirect::to("trainings?success=报名成功")->with('message', 'register success!');
     }
 
     public function ajaxStore($training_id)
@@ -243,7 +243,11 @@ class TrainingsAttendeesController extends Controller {
             'trainings_attendees.status', 
             'trainings.title',
             'trainings.content',
-            'trainings.date'
+            'trainings.date',
+            'trainings.score',
+            'trainings.speaker',
+            'trainings.seats',
+            'trainings.seats_left'
             )->where('trainings.date', '>=', $start_date);
      
         // Admin can search everyone or no worker_id
