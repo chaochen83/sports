@@ -44,8 +44,11 @@ Route::post('trainings_attendees/search', 'TrainingsAttendeesController@doSearch
 
 Route::get('trainings_attendees/{id}/approve', 'TrainingsAttendeesController@approve');
 Route::get('trainings_attendees/{id}/disapprove', 'TrainingsAttendeesController@disapprove');
-Route::get('cms/score_query', 'TrainingsAttendeesController@scoreQuery');
+Route::get('cms/score_query', 'TrainingsAttendeesController@doScoreQuery');
 Route::post('cms/score_query', 'TrainingsAttendeesController@doScoreQuery');
+Route::any('cms/my_score', 'TrainingsAttendeesController@doScoreQuery');
+Route::any('cms/score/statistic', 'TrainingsAttendeesController@scoreStats');
+// Route::post('cms/score/statistic', 'TrainingsAttendeesController@doScoreStats');
 
 ## Search:
 Route::get('search', 'SearchController@show');

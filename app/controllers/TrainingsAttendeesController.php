@@ -2,6 +2,7 @@
 
 class TrainingsAttendeesController extends Controller {
 
+    const PER_PAGE = 20;
 
     private $worker_id;
 
@@ -192,12 +193,12 @@ class TrainingsAttendeesController extends Controller {
         return View::make('cms.trainingsattendees.search', $data);
     }
 
-    public function scoreQuery()
-    {
-        $data = [];
+    // public function scoreQuery()
+    // {
+    //     $data = [];
 
-        return View::make('cms.trainingsattendees.score_query', $data);        
-    }
+    //     return View::make('cms.trainingsattendees.score_query', $data);        
+    // }
 
 
     public function doScoreQuery()
@@ -226,6 +227,124 @@ class TrainingsAttendeesController extends Controller {
         $data['records'] = $query->get();
 
         return View::make('cms.trainingsattendees.score_query', $data);        
+    }
+
+    // public function scoreStats()
+    // {
+    //     $departments = DB::select('SELECT DISTINCT(company)  FROM `users` WHERE company IS NOT null');
+
+    //     $data['departments'] = $departments;
+
+    //     return View::make('cms.trainingsattendees.score_stats', $data);        
+    // }
+
+
+    public function scoreStats()
+    {
+        $departments_list = DB::select('SELECT DISTINCT(company)  FROM `users` WHERE company IS NOT null');
+
+        if (Input::get('start_date')) {
+            $start_date = Input::get('start_date');
+        } else {
+            $start_date = date('Y-m-d');
+        }
+
+        $query = TrainingsAttendees::join('trainings', 'trainings_attendees.training_id', '=', 'trainings.id')->join('users', 'users.worker_id', '=', 'trainings_attendees.worker_id')->select(
+            'users.company', 
+            'users.name as username', 
+            'trainings_attendees.id', 
+            'trainings_attendees.worker_id', 
+            'trainings_attendees.status', 
+            'trainings.title',
+            'trainings.content',
+            'trainings.date',
+            'trainings.score'
+            )->where('trainings.date', '>=', $start_date);
+
+        if (Input::get('end_date')) {
+            $query = $query->where('trainings.date', '<=', Input::get('end_date'));
+        }
+
+        if (Input::get('department')) {
+            $users = User::select('worker_id')->where('company', Input::get('department'))->get()->toArray();
+
+            $worker_ids = [];
+
+            foreach ($users as $user) {
+                $worker_ids[] = $user['worker_id'];
+            }
+
+            $query = $query->whereIn('trainings_attendees.worker_id', $worker_ids);
+
+        } elseif (Input::get('worker_id')) {
+            $query = $query->where('trainings_attendees.worker_id', Input::get('worker_id'));
+        }
+
+        $items = $query->get();
+
+        /////////////////////////////
+        // Group the score by user //
+        /////////////////////////////
+        $records = [];
+
+        foreach ($items as $item) {
+            $key = $item['worker_id'];
+
+            // Set default:
+            if ( ! isset($records[$key])) {
+                $records[$key]['accumulated_score'] = 0;
+                $records[$key]['username'] = '';
+                $records[$key]['department'] = '';
+                $records[$key]['start_date'] = $start_date;
+                $records[$key]['end_date'] = Input::get('end_date') ? Input::get('end_date') : '-';
+            }
+    
+            if ($item['status'] == 'approved') {
+                $records[$key]['accumulated_score'] += $item['score'];
+            }
+
+            $records[$key]['worker_id'] = $item['worker_id'];
+            $records[$key]['username'] = $item['username'];
+            $records[$key]['department'] = $item['company'];
+        }
+
+        $current_page = Input::get('page') ? (int)Input::get('page') : 1;
+
+        $offset = ($current_page - 1) * self::PER_PAGE;
+
+        $total_records = count($records);
+
+        $records = array_slice($records, $offset, self::PER_PAGE);
+
+        $total_pages = ceil($total_records / self::PER_PAGE);
+
+        $start_index = $offset + 1;
+
+        $end_index = $start_index + count($records) - 1;
+
+        $previous_page = ($current_page - 1 <= 0) ? 1 : ($current_page - 1);
+
+        $next_page = ($current_page + 1 > $total_pages) ? $total_pages : ($current_page + 1);
+
+        $url = '/cms/score/statistic?start_date='.$start_date;
+        $url = Input::get('end_date') ? $url.'&end_date='.Input::get('end_date') : $url;
+        $url = Input::get('department') ? $url.'&department='.Input::get('department') : $url;
+        $url = Input::get('worker_id') ? $url.'&worker_id='.Input::get('worker_id') : $url;
+
+        $data = [
+            'departments_list' => $departments_list,
+            'records'          => $records,
+            'total_records'    => $total_records,
+            'total_pages'      => $total_pages,
+            'start_index'      => $start_index,
+            'end_index'        => $end_index,
+            'current_page'     => $current_page,
+            'url'              => $url,
+            'previous_page'    => $previous_page,
+            'next_page'        => $next_page,
+            ];
+
+        return View::make('cms.trainingsattendees.score_stats', $data);        
     }
 
     public function doSearch()

@@ -9,8 +9,13 @@
         <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings/create' ? 'class="on"' : '') }}><a href="/trainings/create"><i class="glyphicon glyphicon-plus"></i>新增培训</a></dd>
         <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings_attendees' ? 'class="on"' : '') }}><a href="/trainings_attendees"><i class="glyphicon glyphicon-briefcase"></i>培训审核</a></dd>
         @endif
-        <dd {{ ($_SERVER['REQUEST_URI'] == '/cms/score_query' ? 'class="on"' : '') }}><a href="/cms/score_query"><i class="glyphicon glyphicon-briefcase"></i>学分查询</a></dd>
     </dl>
+    <dl class="subtitle trainings">
+        <dt>学分查询</dt>
+        <dd {{ ($_SERVER['REQUEST_URI'] == '/cms/score/statistic' ? 'class="on"' : '') }}><a href="/cms/score/statistic"><i class="glyphicon glyphicon-briefcase"></i>学分统计</a></dd>
+        <dd {{ ($_SERVER['REQUEST_URI'] == '/cms/score_query' ? 'class="on"' : '') }}><a href="/cms/score_query"><i class="glyphicon glyphicon-briefcase"></i>学分查询</a></dd>
+        <dd {{ ($_SERVER['REDIRECT_URL'] == '/cms/my_score' ? 'class="on"' : '') }}><a href="/cms/my_score?worker_id=<?php echo Session::get('user_name');?>"><i class="glyphicon glyphicon-briefcase"></i>我的学分</a></dd>
+    </dl>    
     <dl class="subtitle locations">
         <dt>场地预约</dt>
         <dd {{ ($_SERVER['REQUEST_URI'] == '/locations' ? 'class="on"' : '') }}><a href="/locations"><i class="glyphicon glyphicon-list"></i>场地列表</a></dd>
