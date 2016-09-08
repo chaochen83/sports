@@ -12,14 +12,15 @@
           <div class="cms-seach-bar">
               <div class="form-group">
                   <label for="inputEmail3" class="control-label">日期：</label>
-                  <input type="text" class="form-control" id="startTime" name="start_date" placeholder="开始日期" value="" readonly="">
+                  
+                  <input type="text" class="form-control" id="startTime" name="start_date" placeholder="开始日期" value="@if (Input::get('start_date')) {{Input::get('start_date')}} @else {{date('Y-m-d')}}  @endif" readonly="">
                   <span>-</span>
-                  <input type="text" class="form-control" id="endTime" name="end_date" placeholder="结束日期" value="" readonly="">
+                  <input type="text" class="form-control" id="endTime" name="end_date" placeholder="结束日期" value="{{Input::get('end_date')}}" readonly="">
               </div>
             @if(Session::get('user_role') == 'admin') 
               <div class="form-group">
                   <label for="培训" class="control-label">工号：</label>
-                  <input type="text" class="form-control" name="worker_id" placeholder="请输入工号" value="">
+                  <input type="text" class="form-control" name="worker_id" placeholder="请输入工号" value="{{Input::get('worker_id')}}">
               </div>
             @else
               <input type="hidden" name="worker_id" value="<?php echo Session::get('user_name'); ?>">

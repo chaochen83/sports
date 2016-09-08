@@ -13,23 +13,28 @@
         <div class="cms-seach-bar">
             @if (Session::get('user_role') == 'admin')
               <div class="form-group">
-                <label for="worker_id" class="control-label">工号</label>
-                  <input type="text" id="worker_id" name="worker_id" class="form-control" placeholder="工号" value="" >
+                <label for="worker_id" class="control-label">工号：</label>
+                  <input type="text" id="worker_id" name="worker_id" class="form-control" placeholder="请输入工号" value="{{$worker_id}}" >
               </div>
             @endif
             <div class="form-group">
                 <label for="name" class="control-label">部门：</label>
-                <select name="department" id="" class="form-control">
+                <select name="department" id="" data-width="180" class="form-control department def-sel" >
+                    <option selected=""  value="">请选择</option>
                     @foreach($departments_list as $d)
-                    <option value="{{$d->company}}">{{$d->company}}</option>
+                    @if($d->company == $department)
+                    <option selected=""  value="{{$d->company}}">{{$d->company}}</option>
+                    @else
+                    <option  value="{{$d->company}}">{{$d->company}}</option>
+                    @endif
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
                 <label for="inputEmail3" class="control-label">日期：</label>
-                <input type="text" class="form-control" id="startTime" name="start_date" placeholder="开始日期" value="" readonly="">
+                <input type="text" class="form-control" id="startTime" name="start_date" placeholder="开始日期" value="@if($start_date == ""){{date('Y-m-d')}}  @else {{$start_date}}  @endif" readonly="">
                 <span>-</span>
-                <input type="text" class="form-control" id="endTime" name="end_date" placeholder="结束日期" value="" readonly="">
+                <input type="text" class="form-control" id="endTime" name="end_date" placeholder="结束日期" value="" readonly="{{$end_date}}">
             </div>
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-search"></i> 查询</button>
@@ -76,15 +81,12 @@
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <li class="active"><a href="{{$url.'&page=1'}}">1</a></li>
-            <!-- <li><a href="javascript:void(0);" data-page="2">2</a></li> -->
-            <li class="disabled"><a href="#">...</a></li>
-            <!-- <li class="active"><a href="{{$url.'&page='.$previous_page}}">{{$previous_page}}</a></li> -->
+            <!-- <li><a href="{{$url.'&page=1'}}">1</a></li>
             <li class="active"><a href="{{$url.'&page='.$current_page}}">{{$current_page}}</a></li>
-            <!-- <li class="active"><a href="{{$url.'&page='.$next_page}}">{{$next_page}}</a></li> -->
-            <li class="disabled"><a href="#">...</a></li>
-            <!-- <li><a href="javascript:void(0);" data-page="99">99</a></li> -->
-            <li class="active"><a href="{{$url.'&page='.$total_pages}}">{{$total_pages}}</a></li>
+            <li><a href="{{$url.'&page='.$total_pages}}">{{$total_pages}}</a></li> -->
+            @for ($page = 1; $page <= $total_pages; $page++)
+            <li {{ $page == $current_page ? 'class="active"' : ''}}><a href="{{$url.'&page='.$page}}">{{$page}}</a></li>
+            @endfor
             <li>
                 <a href="{{$url.'&page='.$next_page}}" data-page="2" aria-label="Next">
                     <span aria-hidden="true">&raquo;</span>
@@ -95,4 +97,12 @@
     </div>
 </div>
 
+@stop
+
+@section('custom_js')
+<script type="text/javascript">
+    $(function() {
+        BsCommon.setSelectTwo("department");
+    });
+</script>
 @stop

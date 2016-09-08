@@ -15,28 +15,20 @@
     @yield('extra_css')
     <!-- <link href="/css/cms.css" rel="stylesheet"> -->
     <link href="/css/cms-skins.min.css" rel="stylesheet">
-</head>
-<body>
-    @include('cms.layouts.header')
-
-    <div class="container-fluid m-center">
-      <div class="row">
-        
-        @yield('content')
-      </div>
-    </div>
-
-    <!-- @include('cms.layouts.footer') -->
-
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="/js/jquery-1.11.3.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="/js/bootstrap.min.js"></script>
-    
     <!-- Custom styles for CMS -->
     <script src="/js/cms-main.min.js"></script>
     <script src="/js/cms.js"></script>
+</head>
+<body>
+    @include('cms.layouts.header')
+    <div class="container-fluid m-center">
+      <div class="row">
+        @yield('content')
+      </div>
+    </div>
+    @include('cms.layouts.footer')
     @yield('extra_js')
     @yield('custom_js')
 </body>

@@ -44,7 +44,7 @@
             <div class="form-group">
               <label for="date" class="col-sm-2 control-label">日期</label>
               <div class="col-sm-6">
-                <input type="date" class="form-control defTime" name="date" placeholder="作者" value="{{ $article->date }}">
+                <input type="text" class="form-control defTime" name="date" placeholder="作者" value="{{ $article->date }}">
               </div>
             </div>
 

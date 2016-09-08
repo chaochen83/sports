@@ -7,14 +7,17 @@
         <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings_attendees/search' ? 'class="on"' : '') }}><a href="/trainings_attendees/search"><i class="glyphicon glyphicon-list-alt"></i>培训记录</a></dd>
         @if(Session::get('user_role') == 'admin') 
         <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings/create' ? 'class="on"' : '') }}><a href="/trainings/create"><i class="glyphicon glyphicon-plus"></i>新增培训</a></dd>
-        <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings_attendees' ? 'class="on"' : '') }}><a href="/trainings_attendees"><i class="glyphicon glyphicon-briefcase"></i>培训审核</a></dd>
+        <!-- <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings_attendees' ? 'class="on"' : '') }}><a href="/trainings_attendees"><i class="glyphicon glyphicon-briefcase"></i>培训审核</a></dd> -->
         @endif
     </dl>
-    <dl class="subtitle trainings">
+    <dl class="subtitle score">
         <dt>学分查询</dt>
+        @if(Session::get('user_role') == 'admin')
         <dd {{ ($_SERVER['REQUEST_URI'] == '/cms/score/statistic' ? 'class="on"' : '') }}><a href="/cms/score/statistic"><i class="glyphicon glyphicon-briefcase"></i>学分统计</a></dd>
-        <dd {{ ($_SERVER['REQUEST_URI'] == '/cms/score_query' ? 'class="on"' : '') }}><a href="/cms/score_query"><i class="glyphicon glyphicon-briefcase"></i>学分查询</a></dd>
+        <dd {{ ($_SERVER['REQUEST_URI'] == '/cms/score_query' ? 'class="on"' : '') }}><a href="/cms/score_query?worker_id=<?php echo Session::get('user_name');?>"><i class="glyphicon glyphicon-briefcase"></i>学分查询</a></dd>
+        @else
         <dd {{ ($_SERVER['REDIRECT_URL'] == '/cms/my_score' ? 'class="on"' : '') }}><a href="/cms/my_score?worker_id=<?php echo Session::get('user_name');?>"><i class="glyphicon glyphicon-briefcase"></i>我的学分</a></dd>
+        @endif
     </dl>    
     <dl class="subtitle locations">
         <dt>场地预约</dt>
@@ -25,7 +28,7 @@
         <dd {{ ($_SERVER['REQUEST_URI'] == '/locations_rent/audit' ? 'class="on"' : '') }}><a href="/locations_rent/audit"><i class="glyphicon glyphicon-briefcase"></i>场地审核</a></dd>
         @endif
     </dl>
-     @if(Session::get('user_role') == 'admin') 
+    @if(Session::get('user_role') == 'admin') 
     <dl class="subtitle categories">
         <dt>栏目设置</dt>
         <dd {{ ($_SERVER['REQUEST_URI'] == '/cms/categories' ? 'class="on"' : '') }}><a href="/cms/categories"><i class="glyphicon glyphicon-list"></i>一级栏目</a></dd>

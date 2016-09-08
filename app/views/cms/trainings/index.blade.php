@@ -16,14 +16,14 @@
                 <tr>
                   <th width="5">#</th>
                   <th class="x-20">名称</th>
-                  <th class="x-10">介绍</th>
-                  <th class="x-10" class="x-10">日期</th>
+                  <!-- <th class="x-10">介绍</th> -->
+                  <th class="x-15">日期</th>
                   <th class="x-10">主讲人</th>
                   <th class="x-10">培训地点</th>
-                  <th class="x-10">限报人数</th>
-                  <th class="x-10">已报人数</th>
+                  <!-- <th class="x-10">限报人数</th> -->
+                  <th class="x-15">已报/总人数</th>
                   <th class="x-10">学分</th>
-                  <th class="x-10">操作</th>
+                  <th class="x-20">操作</th>
                 </tr>
               </thead>
               <tbody>
@@ -31,12 +31,12 @@
                 <tr>
                   <td>{{ $training->id }}</td>
                   <td><a href="/trainings/{{ $training->id }}" target="_blank">{{ $training->title }}</a></td>
-                  <td>{{ mb_substr($training->content, 0, 10) }}</td>
+                  <!-- <td>{{ mb_substr($training->content, 0, 10) }}</td> -->
                   <td>{{ $training->date }}</td>
                   <td>{{ $training->speaker }}</td>
                   <td>{{ $training->location }}</td>
-                  <td>{{ $training->seats }}</td>
-                  <td>{{ $training->seats - $training->seats_left }}</td>
+                  <!-- <td>{{ $training->seats }}</td> -->
+                  <td>{{ $training->seats - $training->seats_left }}/{{ $training->seats }}</td>
                   <td><a href="/trainings_attendees/search" >{{ $training->score }}</a></td>
                   <td>
                     <a href="/trainings/{{ $training->id }}/attendees">

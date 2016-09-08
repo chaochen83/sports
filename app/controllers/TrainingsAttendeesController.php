@@ -332,6 +332,10 @@ class TrainingsAttendeesController extends Controller {
         $url = Input::get('worker_id') ? $url.'&worker_id='.Input::get('worker_id') : $url;
 
         $data = [
+            'department'       => Input::get('department') ? Input::get('department') : "",
+            'start_date'       => $start_date,
+            'end_date'         => Input::get('end_date')? Input::get('end_date') : "",
+            'worker_id'        => Input::get('worker_id')? Input::get('worker_id') : "",
             'departments_list' => $departments_list,
             'records'          => $records,
             'total_records'    => $total_records,

@@ -6,7 +6,7 @@
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
           {{{ Session::get('message') }}} 
-          <h3 class="sub-header"><a>查询培训记录</a></h3>
+          <h3 class="sub-header"><a class="on">查询培训记录</a></h3>
 
           {{ Form::open(array('action' => array('TrainingsAttendeesController@doSearch'), 'class' => 'form-inline')) }}
             <fieldset class="cms-seach-bar">
@@ -14,21 +14,26 @@
             @if (Session::get('user_role') == 'admin')
               <div class="form-group">
                 <label for="worker_id" class="control-label">工号</label>
-                  <input type="text" id="worker_id" name="worker_id" class="form-control" placeholder="工号" value="" >
+                  <input type="text" id="worker_id" name="worker_id" class="form-control" placeholder="工号" value="{{Input::get('worker_id')}}" >
               </div>
             @endif
 
               <div class="form-group">
                 <label for="inputEmail3" class="control-label">开始日期</label>
-                  <input type="text" class="form-control defTime" name="start_date" placeholder="开始日期" value="{{date('Y-m-d')}}">
+                  <input type="text" class="form-control defTime" name="start_date" placeholder="开始日期" value="@if (Input::get('start_date')) {{Input::get('start_date')}} @else {{date('Y-m-d')}}  @endif">
               </div>
 
               <div class="form-group">
                 <label for="培训" class="control-label">培训</label>
-                  <select id="training" name="training_id" class="form-control">
-                      <option value=""></option>
+                  <select id="training" name="training_id" class="form-control SelectTwo" data-width="180">
+                      <option value="">请选择</option>
                     @foreach($trainings as $id => $title)
+                     @if (Input::get('training_id') == $id)
+                      <option selected="" value="{{$id}}">{{$title}}</option>
+                     @else
                       <option value="{{$id}}">{{$title}}</option>
+                     @endif
+                     
                     @endforeach
                   </select>
               </div>
@@ -51,12 +56,12 @@
                   <th class="x-10">开始日期</th>
                   <th class="x-10">主讲人</th>
                   <th class="x-10">学分</th>
-                  <th class="x-10">限定人数</th>
-                  <th class="x-10">已申请</th>
+                  <!-- <th class="x-10">限定人数</th> -->
+                  <th class="x-15">已申请/总人数</th>
                   <th class="x-10">工号</th>
-                  <th class="x-5">状态</th>
+                  <th class="x-10">状态</th>
                 @if(Session::get('user_role') == 'admin') 
-                  <th class="x-20">操作</th>
+                  <th class="x-15">操作</th>
                 @endif
                 </tr>
               </thead>
@@ -68,8 +73,8 @@
                   <td>{{ $record->date }}</td>
                   <td>{{ $record->speaker }}</td>
                   <td>{{ $record->score }}</td>
-                  <td>{{ $record->seats }}</td>
-                  <td>{{ $record->seats - $record->seats_left }}</td>
+                  <!-- <td>{{ $record->seats }}</td> -->
+                  <td>{{ $record->seats - $record->seats_left }}/{{ $record->seats }}</td>
                   <td>{{ $record->worker_id }}</td>
                   <td>
                     <?php
@@ -81,8 +86,9 @@
                         echo '<span class="label label-danger">未通过</span>';
                     ?>
                   </td>
+                   @if(Session::get('user_role') == 'admin') 
                   <td>
-                    @if(Session::get('user_role') == 'admin' && $record->status == 'auditing') 
+                    @if($record->status == 'auditing') 
                     <a href="/trainings_attendees/{{ $record->id }}/approve">
                       <span class="glyphicon glyphicon-ok" aria-hidden="true">签到</span>
                     </a>
@@ -91,10 +97,18 @@
                     </a>
                     @endif
                   </td>
+                   @endif
                 </tr>
                 @endforeach
               </tbody>
             </table>
           </div>
         </div>
+@stop
+@section('custom_js')
+<script type="text/javascript">
+    $(function() {
+        BsCommon.setSelectTwo("SelectTwo");
+    });
+</script>
 @stop

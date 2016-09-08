@@ -2,6 +2,8 @@
 
 @section('content')
 
+@include('cms.layouts.sidebar')
+
           @include('cms.layouts.notice')
 
         <div class="col-md-10 col-md-offset-2 main cms-list">
@@ -13,6 +15,7 @@
                 <tr>
                   <th>工号</th>
                   <th>用户名</th>
+                  <th>操作</th>
                 </tr>
               </thead>
               <tbody>

@@ -3,6 +3,8 @@
 
 @section('content')
 
+@include('cms.layouts.sidebar')
+
         <div class="col-md-10 col-md-offset-2 main cms-list">
 
           @include('cms.layouts.notice')
