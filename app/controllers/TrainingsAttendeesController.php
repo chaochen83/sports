@@ -40,8 +40,9 @@ class TrainingsAttendeesController extends Controller {
     public function approve($id)
     {
         // Auth::admin
-
         $record = TrainingsAttendees::find($id);
+
+        $user = User::where('worker_id', $record->worker_id)->first();
 
         if ($record->status == 'auditing')
         {
@@ -51,11 +52,11 @@ class TrainingsAttendeesController extends Controller {
 
             TrainingsAttendees::where('id', $id)->update(['status' => 'approved']);
 
-            $message = 'Operation Successful';
+            $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 参加的 : {$training->title}，已签到";
         }
         else
         {
-            $message = 'Already audited!';
+            $message = '已经审核过了!';
         }
 
         return Redirect::back()->with('message', $message);
@@ -64,20 +65,23 @@ class TrainingsAttendeesController extends Controller {
     public function disapprove($id)
     {
         // Auth::admin
-
         $record = TrainingsAttendees::find($id);
+
+        $user = User::where('worker_id', $record->worker_id)->first();
 
         if ($record->status == 'auditing')
         {
+            $training = Trainings::find($record->training_id);
+
             Trainings::where('id', $record->training_id)->increment('seats_left', 1);
 
             TrainingsAttendees::where('id', $id)->update(['status' => 'disapproved']);
 
-            $message = 'Operation Successful';
+            $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 参加的 : {$training->title}，已记旷课";
         }
         else
         {
-            $message = 'Already audited!';
+            $message = '已经审核过了!';
         }
 
         return Redirect::back()->with('message', $message);
@@ -144,62 +148,161 @@ class TrainingsAttendeesController extends Controller {
     {
         $data = [];
 
-        // If is normal user, show all of his records
-        // If is admin, don't show any record b/c it will be too many:
-        if (Session::get('user_role') !== 'admin') 
-        {
-            // Only search future if not specified:
-            if (Input::get('start_date')) {
-                $start_date = Input::get('start_date');
-            } else {
-                $start_date = date('Y-m-d');
-            }
-
-            $query = TrainingsAttendees::join('trainings', 'trainings_attendees.training_id', '=', 'trainings.id')->select(
-                'trainings_attendees.id', 
-                'trainings_attendees.worker_id', 
-                'trainings_attendees.status', 
-                'trainings.title',
-                'trainings.content',
-                'trainings.date'
-                )->where('trainings.date', '>=', $start_date);
-         
-            // Admin can search everyone or no worker_id
-            if (Session::get('user_role') == 'admin') {
-                if (Input::get('worker_id')) {  // if no worker_id is passed, ignore worker_in where condition:
-                    $query = $query->where('trainings_attendees.worker_id', Input::get('worker_id'));
-                }
-            // Teacher can only search their own:
-            } else { 
-                $query = $query->where('trainings_attendees.worker_id', Session::get('user_name'));
-            }
-
-            if (Input::get('training_id')) $query = $query->where('trainings_attendees.training_id', Input::get('training_id'));
-            
-            $records = $query->get();
-
-            $data['records']   = $records;
-
-        }
-        else
-        {
-            $data['records']   = [];
-        }
-
+        ///////////////
+        // Dropdowns //
+        ///////////////
         $trainings = Trainings::notDeleted()->notOver()->lists('title', 'id');
+        $ended_trainings = Trainings::notDeleted()->isOver()->lists('title', 'id');
+
+        $departments_list = DB::select('SELECT DISTINCT(company)  FROM `users` WHERE company IS NOT null');
 
         $data['trainings'] = $trainings;
+        $data['ended_trainings'] = $ended_trainings;
+        $data['departments_list'] = $departments_list;
+
+        /////////////
+        // Queries //
+        /////////////
+        if (Session::get('user_role') !== 'admin') {
+            $q_worker_id = Session::get('user_name');  // teacher can only query himself
+        } else {
+            $q_worker_id = null;
+        }
+
+        $q_username = Input::get('username');  // admin can search by teacher's name
+
+        $q_start_date = Input::get('start_date');
+
+        $q_training_id = Input::get('training_id');
+
+        $q_ended_training_id = Input::get('ended_training_id');
+
+        $q_department = Input::get('department');
+
+        ////////////
+        // Search //
+        ////////////
+        $query = TrainingsAttendees::join('trainings', 'trainings_attendees.training_id', '=', 'trainings.id')->join('users', 'trainings_attendees.worker_id', '=', 'users.worker_id')->select(
+            'trainings_attendees.id', 
+            'trainings_attendees.worker_id', 
+            'trainings_attendees.status', 
+            'trainings.title',
+            'trainings.content',
+            'trainings.date',
+            'trainings.score',
+            'trainings.speaker',
+            'trainings.seats',
+            'trainings.seats_left',
+            'users.name as username'
+            );
+
+        if ($q_start_date) $query = $query->where('trainings.date', $q_start_date);
+
+        if ($q_worker_id) $query = $query->where('trainings_attendees.worker_id', $q_worker_id);
+
+        if ($q_training_id and $q_ended_training_id) {
+            $query->whereIn('trainings_attendees.training_id', [$q_training_id, $q_ended_training_id]);
+        } elseif ($q_training_id) {
+            $query = $query->where('trainings_attendees.training_id', $q_training_id);
+        } elseif ($q_ended_training_id) {
+            $query = $query->where('trainings_attendees.training_id', $q_ended_training_id);
+        }
+
+        if ($q_department) {
+            $company_worker_ids = User::where('company', $q_department)->lists('worker_id');
+
+            $query = $query->whereIn('trainings_attendees.worker_id', $company_worker_ids);
+        }
+
+        if ($q_username) {
+            $user_record = User::where('name', $q_username)->first();
+
+            if ($user_record) {
+                $query = $query->where('trainings_attendees.worker_id', $user_record->worker_id);
+            } else {
+                $query = $query->where('trainings_attendees.worker_id', 'noexists');  // force return empty []
+            }
+
+        }
+
+        $records = $query->get()->toArray();
+
+        ////////////////
+        // Pagination //
+        ////////////////
+        $data['total_records_count'] = count($records);
+
+        $data['current_page'] = (int) Input::get('page', 1);
+
+        $data['total_pages'] = (int) ceil($data['total_records_count'] / self::PER_PAGE);
+
+        $data['next_page'] = $data['current_page'] >= $data['total_pages'] ? $data['total_pages'] : $data['current_page'] + 1;
+
+        $data['previous_page'] = $data['current_page'] <= 1 ? 1 : $data['current_page'] - 1;
+
+        $data['start_index'] = ($data['current_page'] - 1) * self::PER_PAGE;
+
+        $data['records'] = array_slice($records, $data['start_index'], self::PER_PAGE);
+
+        $data['end_index'] = $data['start_index'] + count($data['records']);
+
+        ////////////////////////
+        // For Pagination url //
+        ////////////////////////
+        $redirect_url = '/trainings_attendees/search?';
+
+        if (Input::get('username')) {
+            $redirect_url .= 'username='.Input::get('username').'&';
+        }
+
+        if (Input::get('start_date')) {
+            $redirect_url .= 'start_date='.Input::get('start_date').'&';
+        }
+
+        if (Input::get('training_id')) {
+            $redirect_url .= 'training_id='.Input::get('training_id').'&';
+        }
+
+        if (Input::get('ended_training_id')) {
+            $redirect_url .= 'ended_training_id='.Input::get('ended_training_id').'&';
+        }
+
+        if (Input::get('department')) {
+            $redirect_url .= 'department='.Input::get('department').'&';
+        }
+
+        $data['base_url'] = $redirect_url;
+
 
         return View::make('cms.trainingsattendees.search', $data);
     }
 
-    // public function scoreQuery()
-    // {
-    //     $data = [];
+    public function doSearch()
+    {
+        $redirect_url = 'trainings_attendees/search?';
 
-    //     return View::make('cms.trainingsattendees.score_query', $data);        
-    // }
+        if (Input::get('username')) {
+            $redirect_url .= 'username='.Input::get('username').'&';
+        }
 
+        if (Input::get('start_date')) {
+            $redirect_url .= 'start_date='.Input::get('start_date').'&';
+        }
+
+        if (Input::get('training_id')) {
+            $redirect_url .= 'training_id='.Input::get('training_id').'&';
+        }
+
+        if (Input::get('ended_training_id')) {
+            $redirect_url .= 'ended_training_id='.Input::get('ended_training_id').'&';
+        }
+
+        if (Input::get('department')) {
+            $redirect_url .= 'department='.Input::get('department').'&';
+        }
+
+        return Redirect::to($redirect_url);
+    }
 
     public function doScoreQuery()
     {
@@ -276,8 +379,8 @@ class TrainingsAttendeesController extends Controller {
 
             $query = $query->whereIn('trainings_attendees.worker_id', $worker_ids);
 
-        } elseif (Input::get('worker_id')) {
-            $query = $query->where('trainings_attendees.worker_id', Input::get('worker_id'));
+        } elseif (Input::get('username')) {
+            $query = $query->where('users.name', Input::get('username'));
         }
 
         $items = $query->get();
@@ -332,6 +435,7 @@ class TrainingsAttendeesController extends Controller {
         $url = Input::get('worker_id') ? $url.'&worker_id='.Input::get('worker_id') : $url;
 
         $data = [
+            'q_username'       => Input::get('username', ''),
             'department'       => Input::get('department') ? Input::get('department') : "",
             'start_date'       => $start_date,
             'end_date'         => Input::get('end_date')? Input::get('end_date') : "",
@@ -351,51 +455,7 @@ class TrainingsAttendeesController extends Controller {
         return View::make('cms.trainingsattendees.score_stats', $data);        
     }
 
-    public function doSearch()
-    {
-        // Only search future if not specified:
-        if (Input::get('start_date')) {
-            $start_date = Input::get('start_date');
-        } else {
-            $start_date = date('Y-m-d');
-        }
 
-        $query = TrainingsAttendees::join('trainings', 'trainings_attendees.training_id', '=', 'trainings.id')->select(
-            'trainings_attendees.id', 
-            'trainings_attendees.worker_id', 
-            'trainings_attendees.status', 
-            'trainings.title',
-            'trainings.content',
-            'trainings.date',
-            'trainings.score',
-            'trainings.speaker',
-            'trainings.seats',
-            'trainings.seats_left'
-            )->where('trainings.date', '>=', $start_date);
-     
-        // Admin can search everyone or no worker_id
-        if (Session::get('user_role') == 'admin') {
-            if (Input::get('worker_id')) {  // if no worker_id is passed, ignore worker_in where condition:
-                $query = $query->where('trainings_attendees.worker_id', Input::get('worker_id'));
-            }
-        // Teacher can only search their own:
-        } else { 
-            $query = $query->where('trainings_attendees.worker_id', Session::get('user_name'));
-        }
-
-        if (Input::get('training_id')) $query = $query->where('trainings_attendees.training_id', Input::get('training_id'));
-        
-        $records = $query->get();
-
-        $trainings = Trainings::notDeleted()->lists('title', 'id');
-
-        $data = [];
-
-        $data['records']   = $records;
-        $data['trainings'] = $trainings;
-
-        return View::make('cms.trainingsattendees.search', $data);
-    }
 
     public function audit()
     {

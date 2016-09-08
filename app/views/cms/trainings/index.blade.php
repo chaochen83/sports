@@ -23,6 +23,7 @@
                   <!-- <th class="x-10">限报人数</th> -->
                   <th class="x-15">已报/总人数</th>
                   <th class="x-10">学分</th>
+                  <th class="x-10">状态</th>
                   <th class="x-20">操作</th>
                 </tr>
               </thead>
@@ -38,10 +39,22 @@
                   <!-- <td>{{ $training->seats }}</td> -->
                   <td>{{ $training->seats - $training->seats_left }}/{{ $training->seats }}</td>
                   <td><a href="/trainings_attendees/search" >{{ $training->score }}</a></td>
+
                   <td>
+                  @if (in_array($training->id, $attended_trainings))
+                  已报名
+                  @else
+                  未报名
+                  @endif
+                  </td>
+
+                  <td>
+                    @if ( ! in_array($training->id, $attended_trainings))
                     <a href="/trainings/{{ $training->id }}/attendees">
                       <span class="glyphicon glyphicon-check" aria-hidden="true" title="报名"></span>
                     </a>
+                    @endif
+
                   @if(Session::get('user_role') == 'admin') 
                     <a href="/trainings/{{ $training->id }}/edit">
                       <span class="glyphicon glyphicon-pencil" aria-hidden="true" title="编辑培训"></span>

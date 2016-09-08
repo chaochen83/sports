@@ -13,8 +13,8 @@
         <div class="cms-seach-bar">
             @if (Session::get('user_role') == 'admin')
               <div class="form-group">
-                <label for="worker_id" class="control-label">工号：</label>
-                  <input type="text" id="worker_id" name="worker_id" class="form-control" placeholder="请输入工号" value="{{$worker_id}}" >
+                <label for="worker_id" class="control-label">姓名</label>
+                  <input type="text" id="worker_id" name="username" class="form-control" placeholder="请输入姓名" value="{{$q_username}}" >
               </div>
             @endif
             <div class="form-group">

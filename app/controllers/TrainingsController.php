@@ -13,7 +13,11 @@ class TrainingsController extends Controller {
 
     public function index()
     {
+        $worker_id = Session::get('user_name');
+
         $trainings = Trainings::notDeleted()->notOver()->paginate(self::PER_PAGE);
+
+        $attended_trainings = TrainingsAttendees::where('worker_id', $worker_id)->lists('training_id');
 
         $current_page = Input::get('page') ? (int)Input::get('page') : 1;
 
@@ -38,6 +42,7 @@ class TrainingsController extends Controller {
             'current_page'  => $current_page,
             'previous_page' => $previous_page,
             'next_page'     => $next_page,
+            'attended_trainings' => $attended_trainings,
             ];
 
         return View::make('cms.trainings.index', $data); // return View('pages.about');

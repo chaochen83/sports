@@ -26,5 +26,10 @@ class Trainings extends Eloquent {
     public function scopeNotOver($query)
     {
         return $query->where('date', '>=', date('Y-m-d'));
-    }    
+    } 
+
+    public function scopeIsOver($query)
+    {
+        return $query->where('date', '<', date('Y-m-d'));
+    }   
 }
