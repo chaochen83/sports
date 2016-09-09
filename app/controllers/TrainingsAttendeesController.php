@@ -2,7 +2,7 @@
 
 class TrainingsAttendeesController extends Controller {
 
-    const PER_PAGE = 20;
+    const PER_PAGE = 50;
 
     private $worker_id;
 
@@ -52,7 +52,7 @@ class TrainingsAttendeesController extends Controller {
 
             TrainingsAttendees::where('id', $id)->update(['status' => 'approved']);
 
-            $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 参加的 : {$training->title}，已签到";
+            $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 报名参加的 : {$training->title}，已签到";
         }
         else
         {
@@ -77,7 +77,7 @@ class TrainingsAttendeesController extends Controller {
 
             TrainingsAttendees::where('id', $id)->update(['status' => 'disapproved']);
 
-            $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 参加的 : {$training->title}，已记旷课";
+            $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 报名参加的 : {$training->title}，已记旷课";
         }
         else
         {
@@ -225,7 +225,7 @@ class TrainingsAttendeesController extends Controller {
 
         }
 
-        $records = $query->get()->toArray();
+        $records = $query->orderBy('trainings_attendees.created_at', 'desc')->get()->toArray();
 
         ////////////////
         // Pagination //
@@ -276,6 +276,7 @@ class TrainingsAttendeesController extends Controller {
 
         return View::make('cms.trainingsattendees.search', $data);
     }
+
 
     public function doSearch()
     {

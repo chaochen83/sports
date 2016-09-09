@@ -2,7 +2,7 @@
 
 class TrainingsController extends Controller {
 
-    const PER_PAGE = 20;
+    const PER_PAGE = 50;
 
     public function __construct()
     {
@@ -15,7 +15,7 @@ class TrainingsController extends Controller {
     {
         $worker_id = Session::get('user_name');
 
-        $trainings = Trainings::notDeleted()->notOver()->paginate(self::PER_PAGE);
+        $trainings = Trainings::notDeleted()->orderBy('date', 'desc')->paginate(self::PER_PAGE);
 
         $attended_trainings = TrainingsAttendees::where('worker_id', $worker_id)->lists('training_id');
 

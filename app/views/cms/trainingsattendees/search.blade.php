@@ -88,14 +88,14 @@
             <table class="table table-striped table-hover">
               <thead>
                 <tr>
-                  <th width="5">#</th>
                   <th class="x-20">培训名称</th>
+                  <th class="x-10">培训状态</th>
                   <th class="x-10">开始日期</th>
-                  <th class="x-10">主讲人</th>
-                  <th class="x-10">学分</th>
+                  <th class="x-5">学分</th>
                   <th class="x-15">已申请/总人数</th>
-                  <th class="x-10">姓名</th>
-                  <th class="x-10">状态</th>
+                  <th class="x-10">主讲人</th>
+                  <th class="x-10">学员姓名</th>
+                  <th class="x-10">学员状态</th>
                 @if(Session::get('user_role') == 'admin') 
                   <th class="x-15">操作</th>
                 @endif
@@ -104,12 +104,16 @@
               <tbody>
                 @foreach ($records as $record)
                 <tr>
-                  <td>{{ $record['id'] }}</td>
                   <td>{{ $record['title'] }}</td>
+                  @if ($record['date'] >= date('Y-m-d'))
+                  <td><span class="label label-success">正在进行</span></td>
+                  @else
+                  <td><span class="label label-warning">已结束</span></td>
+                  @endif
                   <td>{{ $record['date'] }}</td>
-                  <td>{{ $record['speaker'] }}</td>
                   <td>{{ $record['score'] }}</td>
                   <td>{{ $record['seats'] - $record['seats_left'] }}/{{ $record['seats'] }}</td>
+                  <td>{{ $record['speaker'] }}</td>
                   <td>{{ $record['username'] }}</td>
                   <td>
                     <?php
