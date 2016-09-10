@@ -76,17 +76,36 @@
               </div>
             </div>
 
-            <div class="form-group">
+    <!--         <div class="form-group">
               <label for="department" class="col-sm-2 control-label">租用部门</label>
               <div class="col-sm-6">
                 <input type="text" class="form-control" name="department" placeholder="租用部门">
               </div>
+            </div> -->
+            <div class="form-group">
+                <label for="department" class="col-sm-2 control-label">部门：</label>
+                <div class="col-sm-6">
+                  <select name="department" id="" data-width="180" class="form-control department def-sel" >
+                      <option selected=""  value="">请选择</option>
+                      @foreach($departments_list as $d)
+                      @if($d->company == Input::get('department'))
+                      <option selected=""  value="{{$d->company}}">{{$d->company}}</option>
+                      @else
+                      <option  value="{{$d->company}}">{{$d->company}}</option>
+                      @endif
+                      @endforeach
+                  </select>
+                </div>
             </div>
 
             <div class="form-group">
               <label for="renter" class="col-sm-2 control-label">租用人</label>
               <div class="col-sm-6">
+                @if(Session::get('user_role') == 'admin') 
                 <input type="text" class="form-control" name="renter" placeholder="租用人">
+                @else
+                <input type="text" class="form-control" name="renter" placeholder="租用人" value="{{$user->name}}" disabled="disabled">
+                @endif
               </div>
             </div>
 
@@ -100,7 +119,7 @@
             <div class="form-group">
               <label for="comment" class="col-sm-2 control-label">备注</label>
               <div class="col-sm-6">
-                <input type="text" class="form-control" name="comment" placeholder="备注">
+                <textarea name="comment" id="comment" class="form-control  result-textarea" class="validate[maxSize[300]]" placeholder="请输入备注，最大不超过300字" maxlength="300" rows="5"></textarea>
               </div>
             </div>
 

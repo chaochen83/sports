@@ -2,7 +2,7 @@
 
 class TrainingsAttendeesController extends Controller {
 
-    const PER_PAGE = 50;
+    const PER_PAGE = 20;
 
     private $worker_id;
 
@@ -54,9 +54,20 @@ class TrainingsAttendeesController extends Controller {
 
             $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 报名参加的 : {$training->title}，已签到";
         }
-        else
-        {
+        elseif ($record->status == 'approved') {
             $message = '已经审核过了!';
+        }
+        else  // 之前disapprove过，反悔了改approve
+        {
+            $training = Trainings::find($record->training_id);
+
+            User::where('worker_id', $record->worker_id)->increment('accumulated_scores', $training->score);
+
+            TrainingsAttendees::where('id', $id)->update(['status' => 'approved']);
+
+            Trainings::where('id', $record->training_id)->decrement('seats_left', 1);
+
+            $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 报名参加的 : {$training->title}，已签到";
         }
 
         return Redirect::back()->with('message', $message);
@@ -79,10 +90,45 @@ class TrainingsAttendeesController extends Controller {
 
             $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 报名参加的 : {$training->title}，已记旷课";
         }
-        else
+        elseif ($record->status == 'disapproved') 
         {
             $message = '已经审核过了!';
         }
+        else  // 之前approve过，反悔了改disapprove
+        {
+            $training = Trainings::find($record->training_id);
+
+            Trainings::where('id', $record->training_id)->increment('seats_left', 1);
+
+            TrainingsAttendees::where('id', $id)->update(['status' => 'disapproved']);
+
+            User::where('worker_id', $record->worker_id)->decrement('accumulated_scores', $training->score);
+
+            $message = "审核成功！{$user->name}（工号：{$user->worker_id}） 报名参加的 : {$training->title}，已记旷课";
+        }
+
+        return Redirect::back()->with('message', $message);
+    }
+
+    public function delete($id)
+    {
+        // Auth::admin
+        $record = TrainingsAttendees::find($id);
+
+        $user = User::where('worker_id', $record->worker_id)->first();
+
+        $training = Trainings::find($record->training_id);
+
+        if ($record->status == 'approved')
+        {
+            User::where('worker_id', $record->worker_id)->decrement('accumulated_scores', $training->score);
+        }
+
+        TrainingsAttendees::where('id', $id)->delete();
+
+        Trainings::where('id', $record->training_id)->increment('seats_left', 1);
+
+        $message = "删除成功！{$user->name}（工号：{$user->worker_id}） 报名参加的 : {$training->title}，已删除";
 
         return Redirect::back()->with('message', $message);
     }
@@ -151,13 +197,13 @@ class TrainingsAttendeesController extends Controller {
         ///////////////
         // Dropdowns //
         ///////////////
-        $trainings = Trainings::notDeleted()->notOver()->lists('title', 'id');
-        $ended_trainings = Trainings::notDeleted()->isOver()->lists('title', 'id');
+        $trainings = Trainings::notDeleted()->orderBy('date', 'desc')->lists('title', 'id');
+        // $ended_trainings = Trainings::notDeleted()->isOver()->lists('title', 'id');
 
-        $departments_list = DB::select('SELECT DISTINCT(company)  FROM `users` WHERE company IS NOT null');
+        $departments_list = DB::select('SELECT DISTINCT(company)  FROM `users` WHERE company IS NOT null ORDER BY company');
 
         $data['trainings'] = $trainings;
-        $data['ended_trainings'] = $ended_trainings;
+        // $data['ended_trainings'] = $ended_trainings;
         $data['departments_list'] = $departments_list;
 
         /////////////
@@ -175,7 +221,7 @@ class TrainingsAttendeesController extends Controller {
 
         $q_training_id = Input::get('training_id');
 
-        $q_ended_training_id = Input::get('ended_training_id');
+        $q_ended_training_id = Input::get('ended_training_id'); // removed
 
         $q_department = Input::get('department');
 
@@ -186,6 +232,7 @@ class TrainingsAttendeesController extends Controller {
             'trainings_attendees.id', 
             'trainings_attendees.worker_id', 
             'trainings_attendees.status', 
+            'trainings.id as training_id',
             'trainings.title',
             'trainings.content',
             'trainings.date',
@@ -215,17 +262,18 @@ class TrainingsAttendeesController extends Controller {
         }
 
         if ($q_username) {
-            $user_record = User::where('name', $q_username)->first();
+            $worker_ids_arr = User::where('name', 'like', '%'.trim($q_username).'%')->lists('worker_id');
 
-            if ($user_record) {
-                $query = $query->where('trainings_attendees.worker_id', $user_record->worker_id);
+            if (count($worker_ids_arr) > 0) {
+                $query = $query->whereIn('trainings_attendees.worker_id', $worker_ids_arr);
             } else {
                 $query = $query->where('trainings_attendees.worker_id', 'noexists');  // force return empty []
             }
 
         }
 
-        $records = $query->orderBy('trainings_attendees.created_at', 'desc')->get()->toArray();
+        $records = $query->orderBy('trainings.date', 'desc')->get()->toArray();
+        // $records = $query->orderBy('trainings_attendees.created_at', 'desc')->get()->toArray();
 
         ////////////////
         // Pagination //
@@ -287,7 +335,7 @@ class TrainingsAttendeesController extends Controller {
         }
 
         if (Input::get('start_date')) {
-            $redirect_url .= 'start_date='.Input::get('start_date').'&';
+            $redirect_url .= 'start_date='.trim(Input::get('start_date')).'&';
         }
 
         if (Input::get('training_id')) {
@@ -307,13 +355,14 @@ class TrainingsAttendeesController extends Controller {
 
     public function doScoreQuery()
     {
-        if (Input::get('start_date')) {
-            $start_date = Input::get('start_date');
+        if (count(Input::all()) == 0) {
+            $data['is_landing'] = true;
         } else {
-            $start_date = date('Y-m-d');
+            $data['is_landing'] = false;
         }
 
-        $query = TrainingsAttendees::join('trainings', 'trainings_attendees.training_id', '=', 'trainings.id')->select(
+        $query = TrainingsAttendees::join('trainings', 'trainings_attendees.training_id', '=', 'trainings.id')->join('users', 'users.worker_id', '=', 'trainings_attendees.worker_id')->select(
+            'users.name as username',
             'trainings_attendees.id', 
             'trainings_attendees.worker_id', 
             'trainings_attendees.status', 
@@ -321,31 +370,36 @@ class TrainingsAttendeesController extends Controller {
             'trainings.content',
             'trainings.date',
             'trainings.score'
-            )->where('trainings_attendees.worker_id', Input::get('worker_id'))
-            ->where('trainings.date', '>=', $start_date);
+            );
 
+        if (Input::get('start_date')) {
+            $query = $query->where('trainings.date', '>=', trim(Input::get('start_date')));
+        }
         if (Input::get('end_date')) {
-            $query = $query->where('trainings.date', '<=', Input::get('end_date'));
+            $query = $query->where('trainings.date', '<=', trim(Input::get('end_date')));
+        }
+        if (Input::get('worker_id')) {
+            $query = $query->where('trainings_attendees.worker_id', Input::get('worker_id'));
+        }
+        if (Input::get('username')) {
+            $query = $query->where('users.name', 'like', '%'.trim(Input::get('username')).'%');
         }
 
-        $data['records'] = $query->get();
+        if ($data['is_landing']) {
+            $query = $query->limit(100);
+        }
+
+        $data['records'] = $query->orderBy('users.name', 'asc')->orderBy('trainings.date', 'desc')->get();
 
         return View::make('cms.trainingsattendees.score_query', $data);        
     }
 
-    // public function scoreStats()
-    // {
-    //     $departments = DB::select('SELECT DISTINCT(company)  FROM `users` WHERE company IS NOT null');
-
-    //     $data['departments'] = $departments;
-
-    //     return View::make('cms.trainingsattendees.score_stats', $data);        
-    // }
-
 
     public function scoreStats()
     {
-        $departments_list = DB::select('SELECT DISTINCT(company)  FROM `users` WHERE company IS NOT null');
+        $records = [];
+
+        $departments_list = DB::select('SELECT DISTINCT(company)  FROM `users` WHERE company IS NOT null ORDER BY company');
 
         if (Input::get('start_date')) {
             $start_date = Input::get('start_date');
@@ -353,94 +407,59 @@ class TrainingsAttendeesController extends Controller {
             $start_date = date('Y-m-d');
         }
 
-        $query = TrainingsAttendees::join('trainings', 'trainings_attendees.training_id', '=', 'trainings.id')->join('users', 'users.worker_id', '=', 'trainings_attendees.worker_id')->select(
-            'users.company', 
-            'users.name as username', 
-            'trainings_attendees.id', 
-            'trainings_attendees.worker_id', 
-            'trainings_attendees.status', 
-            'trainings.title',
-            'trainings.content',
-            'trainings.date',
-            'trainings.score'
-            )->where('trainings.date', '>=', $start_date);
+        $users = User::select('worker_id', 'name', 'company', 'accumulated_scores')->orderBy('name', 'asc');
 
-        if (Input::get('end_date')) {
-            $query = $query->where('trainings.date', '<=', Input::get('end_date'));
+        if (Input::get('worker_id')) {
+            $users = $users->where('worker_id', Input::get('worker_id'));
+        }
+
+        if (Input::get('username')) {
+            $users = $users->where('name', 'like', '%'.trim(Input::get('username')).'%');
         }
 
         if (Input::get('department')) {
-            $users = User::select('worker_id')->where('company', Input::get('department'))->get()->toArray();
-
-            $worker_ids = [];
-
-            foreach ($users as $user) {
-                $worker_ids[] = $user['worker_id'];
-            }
-
-            $query = $query->whereIn('trainings_attendees.worker_id', $worker_ids);
-
-        } elseif (Input::get('username')) {
-            $query = $query->where('users.name', Input::get('username'));
+            $users = $users->where('company', Input::get('department'));
         }
 
-        $items = $query->get();
+        $users = $users->paginate(self::PER_PAGE);
 
-        /////////////////////////////
-        // Group the score by user //
-        /////////////////////////////
-        $records = [];
-
-        foreach ($items as $item) {
-            $key = $item['worker_id'];
-
-            // Set default:
-            if ( ! isset($records[$key])) {
-                $records[$key]['accumulated_score'] = 0;
-                $records[$key]['username'] = '';
-                $records[$key]['department'] = '';
-                $records[$key]['start_date'] = $start_date;
-                $records[$key]['end_date'] = Input::get('end_date') ? Input::get('end_date') : '-';
-            }
-    
-            if ($item['status'] == 'approved') {
-                $records[$key]['accumulated_score'] += $item['score'];
-            }
-
-            $records[$key]['worker_id'] = $item['worker_id'];
-            $records[$key]['username'] = $item['username'];
-            $records[$key]['department'] = $item['company'];
+        foreach ($users as $user) {
+            $key = $user->worker_id;
+            $records[$key]['worker_id']  = $user->worker_id;
+            $records[$key]['username']   = $user->name;
+            $records[$key]['department'] = $user->company;   
+            $records[$key]['accumulated_score'] = $user->accumulated_scores;   
         }
 
         $current_page = Input::get('page') ? (int)Input::get('page') : 1;
 
         $offset = ($current_page - 1) * self::PER_PAGE;
 
-        $total_records = count($records);
-
-        $records = array_slice($records, $offset, self::PER_PAGE);
+        $total_records = $users->getTotal();
 
         $total_pages = ceil($total_records / self::PER_PAGE);
 
-        $start_index = $offset + 1;
+        $start_index = $users->getFrom();
 
-        $end_index = $start_index + count($records) - 1;
+        $end_index = $users->getTo();
 
         $previous_page = ($current_page - 1 <= 0) ? 1 : ($current_page - 1);
 
         $next_page = ($current_page + 1 > $total_pages) ? $total_pages : ($current_page + 1);
 
-        $url = '/cms/score/statistic?start_date='.$start_date;
-        $url = Input::get('end_date') ? $url.'&end_date='.Input::get('end_date') : $url;
-        $url = Input::get('department') ? $url.'&department='.Input::get('department') : $url;
-        $url = Input::get('worker_id') ? $url.'&worker_id='.Input::get('worker_id') : $url;
+        $url = '/cms/score/statistic?';
+        $url = Input::get('start_date') ? $url.'start_date='.trim(Input::get('start_date')).'&' : $url;
+        $url = Input::get('end_date') ? $url.'end_date='.trim(Input::get('end_date')).'&' : $url;
+        $url = Input::get('department') ? $url.'department='.Input::get('department').'&' : $url;
+        $url = Input::get('worker_id') ? $url.'worker_id='.Input::get('worker_id').'&' : $url;
+        $url = Input::get('username') ? $url.'username='.trim(Input::get('username')).'&' : $url;
 
         $data = [
             'q_username'       => Input::get('username', ''),
-            'department'       => Input::get('department') ? Input::get('department') : "",
-            'start_date'       => $start_date,
-            'end_date'         => Input::get('end_date')? Input::get('end_date') : "",
-            'worker_id'        => Input::get('worker_id')? Input::get('worker_id') : "",
+            'q_worker_id'      => Input::get('worker_id', ''),
+            'q_department'     => Input::get('department', ''),
+            'q_start_date'     => Input::get('start_date', ''),
+            'q_end_date'       => Input::get('end_date', ''),
             'departments_list' => $departments_list,
             'records'          => $records,
             'total_records'    => $total_records,
@@ -452,6 +471,7 @@ class TrainingsAttendeesController extends Controller {
             'previous_page'    => $previous_page,
             'next_page'        => $next_page,
             ];
+
 
         return View::make('cms.trainingsattendees.score_stats', $data);        
     }

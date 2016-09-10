@@ -25,6 +25,7 @@ Route::get('cms', 'UsersController@cms');
 
 ## Trainings:
 Route::get('trainings', 'TrainingsController@index');
+Route::any('trainings/search', 'TrainingsController@searchIndex');
 Route::get('trainings/create', 'TrainingsController@create');
 Route::get('trainings/{id}/edit', 'TrainingsController@edit');
 Route::post('trainings/{id}/update', 'TrainingsController@update');
@@ -44,8 +45,8 @@ Route::post('trainings_attendees/search', 'TrainingsAttendeesController@doSearch
 
 Route::get('trainings_attendees/{id}/approve', 'TrainingsAttendeesController@approve');
 Route::get('trainings_attendees/{id}/disapprove', 'TrainingsAttendeesController@disapprove');
-Route::get('cms/score_query', 'TrainingsAttendeesController@doScoreQuery');
-Route::post('cms/score_query', 'TrainingsAttendeesController@doScoreQuery');
+Route::get('trainings_attendees/{id}/delete', 'TrainingsAttendeesController@delete');
+Route::any('cms/score_query', 'TrainingsAttendeesController@doScoreQuery');
 Route::any('cms/my_score', 'TrainingsAttendeesController@doScoreQuery');
 Route::any('cms/score/statistic', 'TrainingsAttendeesController@scoreStats');
 // Route::post('cms/score/statistic', 'TrainingsAttendeesController@doScoreStats');
@@ -62,8 +63,8 @@ Route::post('locations/{id}/update', 'LocationsController@update');
 Route::post('locations', 'LocationsController@store');
 // Route::get('locations/{id}/create', 'LocationsController@create');
 Route::post('locations/{id}/rent', 'LocationsController@rent');
-Route::get('locations_rent/search', 'LocationsController@searchForm');
-Route::post('locations_rent/search', 'LocationsController@search');
+// Route::get('locations_rent/search', 'LocationsController@searchForm');
+Route::any('locations_rent/search', 'LocationsController@search');
 
 Route::get('locations_rent/audit', 'LocationsController@audit');
 Route::get('locations_rent/{id}/approve', 'LocationsController@approve');

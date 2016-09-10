@@ -8,7 +8,7 @@ class LocationsController extends Controller {
     {
         $this->beforeFilter('worker');
         
-        $this->beforeFilter('csrf', ['only' => ['store', 'update', 'rent', 'search']]);   
+        // $this->beforeFilter('csrf', ['only' => ['store', 'update', 'search']]);   
     }
 
 
@@ -105,44 +105,41 @@ class LocationsController extends Controller {
     {
         $data = [];
 
+        $departments_list = DB::select('SELECT DISTINCT(company)  FROM `users` WHERE company IS NOT null ORDER BY company');
+
         $locations_rent = LocationsRent::where('location_id', $location_id)->where('start_date', '>=', date('Y-m-d'))->approved()->orderBy('start_date')->orderBy('start_time')->get();
 
         $location = Locations::find($location_id);
         
         $data['records']  = $locations_rent;
+        $data['user']  = User::find(Session::get('user_id'));
         $data['location'] = $location;
+        $data['departments_list'] = $departments_list;
 
         return View::make('cms.locations.show', $data);
     }
 
 
-    public function searchForm()
-    {
-        $locations = Locations::notDeleted()->lists('name', 'id');
+    // public function searchForm()
+    // {
+    //     $locations = Locations::notDeleted()->lists('name', 'id');
 
-        $data = [];
+    //     $data = [];
 
-        $data['locations'] = $locations;
-        $data['records']   = [];
+    //     $data['locations'] = $locations;
+    //     $data['records']   = [];
 
-        return View::make('cms.locations.search', $data);
-    }
+    //     return View::make('cms.locations.search', $data);
+    // }
 
 
     public function search()
     {
-        $locations = Locations::notDeleted()->lists('name', 'id');
-
-        // Only search future if not specified:
-        if (Input::get('start_date')) {
-            $start_date = Input::get('start_date');
-        } else {
-            $start_date = date('Y-m-d');
-        }
+        $locations = Locations::notDeleted()->orderBy('name', 'asc')->lists('name', 'id');
 
         $data = [];
 
-        $query = LocationsRent::join('locations', 'locations_rent.location_id', '=', 'locations.id')->select('locations_rent.*', 'locations.name')->where('locations_rent.start_date', '>=', $start_date);
+        $query = LocationsRent::join('locations', 'locations_rent.location_id', '=', 'locations.id')->select('locations_rent.*', 'locations.name');
      
         // Admin can search everyone or no worker_id
         if (Session::get('user_role') == 'admin') {
@@ -156,10 +153,52 @@ class LocationsController extends Controller {
 
         if (Input::get('location_id')) $query = $query->where('locations.id', Input::get('location_id'));
 
-        $records = $query->get();
+        if (Input::get('start_date')) $query = $query->where('locations_rent.start_date', '>=', Input::get('start_date'));
+
+        if (Input::get('username')) $query = $query->where('locations_rent.renter', 'like', '%'.trim(Input::get('username')).'%');
+
+        $records = $query->orderBy('locations_rent.start_date', 'desc')->orderBy('locations_rent.start_time', 'desc')->paginate(self::PER_PAGE);
 
         $data['locations'] = $locations;
         $data['records']   = $records;
+
+        ////////////////
+        // Pagination //
+        ////////////////
+        $current_page = Input::get('page') ? (int)Input::get('page') : 1;
+
+        $offset = ($current_page - 1) * self::PER_PAGE;
+
+        $total_records = $records->getTotal();
+
+        $total_pages = ceil($total_records / self::PER_PAGE);
+
+        $start_index = $records->getFrom();
+
+        $end_index = $records->getTo();
+
+        $previous_page = ($current_page - 1 <= 0) ? 1 : ($current_page - 1);
+
+        $next_page = ($current_page + 1 > $total_pages) ? $total_pages : ($current_page + 1);
+
+        $url = '/locations_rent/search?';
+        $url = Input::get('start_date') ? $url.'start_date='.trim(Input::get('start_date')).'&' : $url;
+        $url = Input::get('location_id') ? $url.'location_id='.Input::get('location_id').'&' : $url;
+        $url = Input::get('worker_id') ? $url.'worker_id='.Input::get('worker_id').'&' : $url;
+        $url = Input::get('username') ? $url.'username='.trim(Input::get('username')).'&' : $url;
+
+        $data = [
+            'locations' => $locations,
+            'records'          => $records,
+            'total_records'    => $total_records,
+            'total_pages'      => $total_pages,
+            'start_index'      => $start_index,
+            'end_index'        => $end_index,
+            'current_page'     => $current_page,
+            'url'              => $url,
+            'previous_page'    => $previous_page,
+            'next_page'        => $next_page,
+            ];
 
         return View::make('cms.locations.search', $data);
     }
@@ -197,11 +236,16 @@ class LocationsController extends Controller {
 
     public function rent($location_id)
     {
+
         // Teacher can only search their own:
         if (Session::get('user_role') == 'admin') {
             $worker_id = Input::get('worker_id');
+            $renter = Input::get('renter');
         } else {
+            $user = User::find(Session::get('user_id'));
+
             $worker_id = Session::get('user_name');
+            $renter = $user->name;
         }
 
         try 
@@ -214,7 +258,7 @@ class LocationsController extends Controller {
                 'end_time'    => date('H:i:s', strtotime(Input::get('end_time'))),
                 'attendees'   => (int)Input::get('attendees'),
                 'department'  => Input::get('department'),
-                'renter'      => Input::get('renter'),
+                'renter'      => $renter,
                 'event'       => Input::get('event'),
                 'comment'     => Input::get('comment'),
                 ]);

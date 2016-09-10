@@ -4,7 +4,14 @@
     <dl class="subtitle trainings">
         <dt>在线报名</dt>
         <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings' ? 'class="on"' : '') }}><a href="/trainings"><i class="glyphicon glyphicon-list"></i>培训列表</a></dd>
-        <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings_attendees/search' ? 'class="on"' : '') }}><a href="/trainings_attendees/search"><i class="glyphicon glyphicon-list-alt"></i>培训记录</a></dd>
+
+        <!-- By default, Admin show only today, teacher show all -->
+        @if(Session::get('user_role') == 'admin')
+        <dd {{ strpos($_SERVER['REQUEST_URI'], '/trainings_attendees/search') !== false  ? 'class="on"' : '' }}><a href="/trainings_attendees/search?start_date={{date('Y-m-d')}}&"><i class="glyphicon glyphicon-list-alt"></i>培训记录</a></dd>
+        @else
+        <dd {{ strpos($_SERVER['REQUEST_URI'], '/trainings_attendees/search') !== false  ? 'class="on"' : '' }}><a href="/trainings_attendees/search"><i class="glyphicon glyphicon-list-alt"></i>培训记录</a></dd>
+        @endif
+
         @if(Session::get('user_role') == 'admin') 
         <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings/create' ? 'class="on"' : '') }}><a href="/trainings/create"><i class="glyphicon glyphicon-plus"></i>新增培训</a></dd>
         <!-- <dd {{ ($_SERVER['REQUEST_URI'] == '/trainings_attendees' ? 'class="on"' : '') }}><a href="/trainings_attendees"><i class="glyphicon glyphicon-briefcase"></i>培训审核</a></dd> -->
@@ -14,9 +21,9 @@
         <dt>学分查询</dt>
         @if(Session::get('user_role') == 'admin')
         <dd {{ ($_SERVER['REQUEST_URI'] == '/cms/score/statistic' ? 'class="on"' : '') }}><a href="/cms/score/statistic"><i class="glyphicon glyphicon-briefcase"></i>学分统计</a></dd>
-        <dd {{ ($_SERVER['REQUEST_URI'] == '/cms/score_query' ? 'class="on"' : '') }}><a href="/cms/score_query?worker_id=<?php echo Session::get('user_name');?>"><i class="glyphicon glyphicon-briefcase"></i>学分查询</a></dd>
+        <dd {{ strpos($_SERVER['REQUEST_URI'], '/cms/score_query') !== false ? 'class="on"' : '' }}><a href="/cms/score_query"><i class="glyphicon glyphicon-briefcase"></i>学分查询</a></dd>
         @else
-        <dd {{ ($_SERVER['REDIRECT_URL'] == '/cms/my_score' ? 'class="on"' : '') }}><a href="/cms/my_score?worker_id=<?php echo Session::get('user_name');?>"><i class="glyphicon glyphicon-briefcase"></i>我的学分</a></dd>
+        <dd {{ strpos($_SERVER['REQUEST_URI'], '/cms/score_query') !== false ? 'class="on"' : '' }}><a href="/cms/score_query?worker_id=<?php echo Session::get('user_name');?>"><i class="glyphicon glyphicon-briefcase"></i>我的学分</a></dd>
         @endif
     </dl>    
     <dl class="subtitle locations">

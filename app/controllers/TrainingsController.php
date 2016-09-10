@@ -15,7 +15,18 @@ class TrainingsController extends Controller {
     {
         $worker_id = Session::get('user_name');
 
-        $trainings = Trainings::notDeleted()->orderBy('date', 'desc')->paginate(self::PER_PAGE);
+        // $trainings = Trainings::notDeleted()->orderBy('date', 'desc')->paginate(self::PER_PAGE);
+        $trainings_query = Trainings::notDeleted();
+
+        if (Input::get('training_title')) {
+            $trainings_query = $trainings_query->where('title', 'like', '%'.Input::get('training_title').'%');
+        }
+
+        if (Input::get('start_date')) {
+            $trainings_query = $trainings_query->where('date', Input::get('start_date'));
+        }
+
+        $trainings = $trainings_query->orderBy('date', 'desc')->paginate(self::PER_PAGE);
 
         $attended_trainings = TrainingsAttendees::where('worker_id', $worker_id)->lists('training_id');
 
@@ -46,6 +57,21 @@ class TrainingsController extends Controller {
             ];
 
         return View::make('cms.trainings.index', $data); // return View('pages.about');
+    }
+
+    public function searchIndex()
+    {
+        $redirect_url = '/trainings?';
+
+        if (Input::get('training_title')) {
+            $redirect_url .= 'training_title='.Input::get('training_title').'&';
+        }
+
+        if (Input::get('start_date')) {
+            $redirect_url .= 'start_date='.trim(Input::get('start_date')).'&';
+        }
+
+        return Redirect::to($redirect_url);        
     }
 
     public function create()

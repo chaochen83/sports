@@ -21,7 +21,7 @@
                     <th class="x-10">租用部门</th>
                     <th class="x-10">租用人</th>
                     <th class="x-15">备注</th>
-                    <th class="x-5">操作</th>
+                    <th class="x-10">操作</th>
                 </tr>
             </thead>
             <tbody>

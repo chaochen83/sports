@@ -17,13 +17,17 @@
             @if (Session::get('user_role') == 'admin')
               <div class="form-group">
                 <label for="worker_id" class="control-label">工号</label>
-                <input type="text" class="form-control" name="worker_id" placeholder="工号" value="" >
+                <input type="text" class="form-control" name="worker_id" placeholder="工号" value="{{Input::get('worker_id')}}" >
+              </div>
+              <div class="form-group">
+                <label for="username" class="control-label">姓名</label>
+                <input type="text" class="form-control" name="username" placeholder="姓名" value="{{Input::get('username')}}" >
               </div>
             @endif
             
               <div class="form-group">
                 <label for="inputEmail3" class="control-label">开始日期</label>
-                <input type="text" class="form-control defTime" name="start_date" placeholder="开始日期" value="{{date('Y-m-d')}}">
+                <input type="text" class="form-control defTime" name="start_date" placeholder="开始日期" value="{{Input::get('start_date')}}">
               </div>
 
               <div class="form-group">
@@ -31,7 +35,11 @@
                 <select id="location_id" name="location_id" class="form-control">
                     <option value="">请选择</option>
                   @foreach($locations as $id => $name)
-                    <option value="{{$id}}">{{$name}}</option>
+                    @if($id == Input::get('location_id'))
+                    <option selected=""  value="{{$id}}">{{$name}}</option>
+                    @else
+                    <option  value="{{$id}}">{{$name}}</option>
+                    @endif
                   @endforeach
                 </select>
               </div>
@@ -88,6 +96,37 @@
               </tbody>
             </table>
           </div>
+
+          <!--最下面的分页器-->
+          <div class="assistant">
+              <div class="total">
+                  <span class="text-primary arial">{{$start_index}}-{{$end_index}}</span>
+                  <span> / 共</span>
+                  <span class="text-primary arial">{{$total_records}}</span>
+                  <span>条</span>
+              </div>
+              <ul class="pagination">
+                  <li class="">
+                      <a href="{{$url.'&page='.$previous_page}}" aria-label="Previous">
+                          <span aria-hidden="true">&laquo;</span>
+                      </a>
+                  </li>
+                  <!-- <li><a href="{{$url.'&page=1'}}">1</a></li>
+                  <li class="active"><a href="{{$url.'&page='.$current_page}}">{{$current_page}}</a></li>
+                  <li><a href="{{$url.'&page='.$total_pages}}">{{$total_pages}}</a></li> -->
+                  @for ($page = 1; $page <= $total_pages; $page++)
+                  <li {{ $page == $current_page ? 'class="active"' : ''}}><a href="{{$url.'&page='.$page}}">{{$page}}</a></li>
+                  @endfor
+                  <li>
+                      <a href="{{$url.'&page='.$next_page}}" data-page="2" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                      </a>
+                      <input type="hidden" name="page" value="">
+                  </li>
+              </ul>
+          </div>
+
+          
         </div>
 
 

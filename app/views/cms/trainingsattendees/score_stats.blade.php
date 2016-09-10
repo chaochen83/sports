@@ -12,17 +12,22 @@
     {{ Form::open(array('action' => array('TrainingsAttendeesController@scoreStats'), 'class' => 'form-inline')) }}
         <div class="cms-seach-bar">
             @if (Session::get('user_role') == 'admin')
-              <div class="form-group">
-                <label for="worker_id" class="control-label">姓名</label>
-                  <input type="text" id="worker_id" name="username" class="form-control" placeholder="请输入姓名" value="{{$q_username}}" >
-              </div>
+                <div class="form-group">
+                    <label for="worker_id" class="control-label">工号</label>
+                    <input type="text" id="worker_id" name="worker_id" class="form-control" placeholder="请输入工号" value="{{Input::get('worker_id')}}" >
+                </div>
+
+                <div class="form-group">
+                    <label for="username" class="control-label">姓名</label>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="请输入姓名" value="{{Input::get('username')}}" >
+                </div>
             @endif
             <div class="form-group">
                 <label for="name" class="control-label">部门：</label>
                 <select name="department" id="" data-width="180" class="form-control department def-sel" >
                     <option selected=""  value="">请选择</option>
                     @foreach($departments_list as $d)
-                    @if($d->company == $department)
+                    @if($d->company == Input::get('department'))
                     <option selected=""  value="{{$d->company}}">{{$d->company}}</option>
                     @else
                     <option  value="{{$d->company}}">{{$d->company}}</option>
@@ -30,12 +35,12 @@
                     @endforeach
                 </select>
             </div>
-            <div class="form-group">
+ <!--            <div class="form-group">
                 <label for="inputEmail3" class="control-label">日期：</label>
-                <input type="text" class="form-control" id="startTime" name="start_date" placeholder="开始日期" value="@if($start_date == ""){{date('Y-m-d')}}  @else {{$start_date}}  @endif" readonly="">
+                <input type="text" class="form-control" id="startTime" name="start_date" placeholder="开始日期" value="@if (Input::get('start_date')) {{Input::get('start_date')}} @endif" readonly="">
                 <span>-</span>
-                <input type="text" class="form-control" id="endTime" name="end_date" placeholder="结束日期" value="" readonly="{{$end_date}}">
-            </div>
+                <input type="text" class="form-control" id="endTime" name="end_date" placeholder="结束日期" value="" readonly="{{Input::get('end_date')}}">
+            </div> -->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary btn-sm"><i class="glyphicon glyphicon-search"></i> 查询</button>
             </div>
@@ -45,22 +50,22 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th width="5">#</th>
+                    <!-- <th width="5">#</th> -->
                     <th class="x-20">姓名</th>
+                    <th class="x-20">工号</th>
                     <th class="x-20">部门</th>
-                    <th class="x-25">开始日期</th>
-                    <th class="x-25">结束日期</th>
+                    <!-- <th class="x-25">开始日期</th> -->
+                    <!-- <th class="x-25">结束日期</th> -->
                     <th class="x-10">总学分</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($records as $record)
                 <tr>
-                    <td></td>
+                    <!-- <td></td> -->
                     <td><a href="/cms/score_query?worker_id={{$record['worker_id']}}">{{ $record['username'] }}</a></td>
+                    <td>{{ $record['worker_id'] }}</td>
                     <td>{{ $record['department'] }}</td>
-                    <td>{{ $record['start_date'] }}</td>
-                    <td>{{ $record['end_date'] }}</td>
                     <td>{{ $record['accumulated_score'] }}</td>
                 </tr>
                 @endforeach

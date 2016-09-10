@@ -42,30 +42,14 @@
               <div class="form-group">
                 <label for="inputEmail3" class="control-label">培训开始日期</label>
                   <input type="text" class="form-control defTime" name="start_date" placeholder="开始日期" value="@if (Input::get('start_date')) {{Input::get('start_date')}} @endif">
-                  <!-- <input type="text" class="form-control defTime" name="start_date" placeholder="开始日期" value="@if (Input::get('start_date')) {{Input::get('start_date')}} @else {{date('Y-m-d')}}  @endif"> -->
               </div>
 
               <div class="form-group">
-                <label for="培训" class="control-label">未结束的培训</label>
+                <label for="培训" class="control-label">培训名称</label>
                   <select id="training" name="training_id" class="form-control SelectTwo" data-width="180">
                       <option value="">请选择</option>
                     @foreach($trainings as $id => $title)
                      @if (Input::get('training_id') == $id)
-                      <option selected="" value="{{$id}}">{{$title}}</option>
-                     @else
-                      <option value="{{$id}}">{{$title}}</option>
-                     @endif
-                     
-                    @endforeach
-                  </select>
-              </div>
-
-              <div class="form-group">
-                <label for="培训" class="control-label">已结束的培训</label>
-                  <select id="training" name="ended_training_id" class="form-control SelectTwo" data-width="180">
-                      <option value="">请选择</option>
-                    @foreach($ended_trainings as $id => $title)
-                     @if (Input::get('ended_training_id') == $id)
                       <option selected="" value="{{$id}}">{{$title}}</option>
                      @else
                       <option value="{{$id}}">{{$title}}</option>
@@ -104,7 +88,13 @@
               <tbody>
                 @foreach ($records as $record)
                 <tr>
-                  <td>{{ $record['title'] }}</td>
+
+                  @if (mb_strlen($record['title']) > 10)
+                  <td><a href="/trainings/{{ $record['training_id'] }}" target="_blank">{{ mb_substr($record['title'], 0, 10).'..' }}</a></td>
+                  @else
+                  <td>{{$record['title']}}</td>
+                  @endif
+
                   @if ($record['date'] >= date('Y-m-d'))
                   <td><span class="label label-success">正在进行</span></td>
                   @else
@@ -118,23 +108,24 @@
                   <td>
                     <?php
                       if ($record['status'] == 'auditing')
-                        echo '<span class="label label-warning">审核中</span>';
+                        echo '<span class="label label-warning">未签到</span>';
                       elseif ($record['status'] == 'approved') 
                         echo '<span class="label label-success">已签到</span>';
                       elseif ($record['status'] == 'disapproved') 
-                        echo '<span class="label label-danger">未通过</span>';
+                        echo '<span class="label label-danger">旷课</span>';
                     ?>
                   </td>
                    @if(Session::get('user_role') == 'admin') 
                   <td>
-                    @if($record['status'] == 'auditing') 
                     <a href="/trainings_attendees/{{ $record['id'] }}/approve">
                       <span class="glyphicon glyphicon-ok" aria-hidden="true">签到</span>
                     </a>
                     <a href="/trainings_attendees/{{ $record['id'] }}/disapprove">
                       <span class="glyphicon glyphicon-remove" aria-hidden="true">旷课</span>
                     </a>
-                    @endif
+                    <a href="/trainings_attendees/{{ $record['id'] }}/delete">
+                      <span class="glyphicon glyphicon-trash del" aria-hidden="true">删除</span>
+                    </a>
                   </td>
                    @endif
                 </tr>
